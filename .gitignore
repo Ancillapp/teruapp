@@ -1,0 +1,10 @@
+*.log
+.firebase*
+coverage
+node_modules
+.eslintcache
+.env*
+.DS_Store
+dist
+dist-ssr
+*.local
