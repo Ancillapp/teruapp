@@ -4,8 +4,9 @@
     "outDir": "lib",
     "target": "es2020",
     "lib": ["dom", "es2020"],
-    "noEmit": false
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "lib/.tsbuildinfo"
   },
-  "compileOnSave": true,
   "include": ["src"]
 }

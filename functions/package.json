@@ -4,8 +4,8 @@
   "scripts": {
     "start": "run-p start:firebase start:functions",
     "start:firebase": "cross-env NODE_ENV=development firebase emulators:start --only hosting,functions",
-    "start:functions": "cross-env NODE_ENV=development tsc -w",
-    "build": "cross-env NODE_ENV=production tsc"
+    "start:functions": "cross-env NODE_ENV=development node scripts/watch",
+    "build": "cross-env NODE_ENV=production node scripts/build"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -15,11 +15,14 @@
     "mongodb": "^3.6.5"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-resolve": "^0.0.15",
     "@types/cors": "^2.8.10",
     "@types/mongodb": "^3.6.10",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
+    "chokidar": "^3.5.1",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.11.2",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
