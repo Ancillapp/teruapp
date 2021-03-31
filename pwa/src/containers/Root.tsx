@@ -9,6 +9,9 @@ import SidebarMenu from '../components/common/SidebarMenu';
 import Loader from '../components/common/Loader';
 import PageSkeleton from '../components/common/PageSkeleton';
 import { TopbarLayoutProps } from '../components/common/TopbarLayout';
+import { useCommunities } from '../providers/CommunitiesProvider';
+
+import Wizard from './core/Wizard';
 
 const SongsRouter = lazy(() => import('./songs/SongsRouter'));
 
@@ -25,7 +28,16 @@ const Root: FunctionComponent = () => {
     onMenuButtonClick: () => setSidebarOpen(!sidebarOpen),
   };
 
-  return (
+  const { communities, selectedCommunity } = useCommunities();
+
+  if (
+    typeof communities === 'undefined' ||
+    typeof selectedCommunity === 'undefined'
+  ) {
+    return <Loader />;
+  }
+
+  return selectedCommunity ? (
     <Suspense fallback={<Loader />}>
       <SidebarLayout
         menuContent={
@@ -45,6 +57,8 @@ const Root: FunctionComponent = () => {
         </Suspense>
       </SidebarLayout>
     </Suspense>
+  ) : (
+    <Wizard />
   );
 };
 
