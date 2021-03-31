@@ -6,8 +6,6 @@ import {
   IconButton,
   Typography,
   makeStyles,
-  useMediaQuery,
-  useTheme,
   ThemeProvider,
   createMuiTheme,
 } from '@material-ui/core';
@@ -82,24 +80,21 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
   onMenuButtonClick,
   children,
 }) => {
-  const theme = useTheme();
-
   const themeName = useThemeName();
 
   const classes = useStyles();
-
-  const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          {!isNarrow && typeof startAdornment === 'undefined' ? (
+          {typeof startAdornment === 'undefined' ? (
             <IconButton
               edge="start"
               aria-label="menu"
               onClick={onMenuButtonClick}
               className={classes.menuButton}
+              color="inherit"
             >
               <MenuIcon />
             </IconButton>
@@ -122,18 +117,10 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
   );
 };
 
-const themeColor = document.querySelector<HTMLMetaElement>(
-  'meta[name="theme-color"]',
-)!;
-
 const TopbarLayout: FunctionComponent<TopbarLayoutProps> = (props) => {
   const themeName = useThemeName();
 
   const theme = themeName === 'dark' ? tweakedDarkTheme : tweakedLightTheme;
-
-  useEffect(() => {
-    themeColor.content = theme.palette.primary.main;
-  }, [theme]);
 
   return (
     <ThemeProvider theme={theme}>
