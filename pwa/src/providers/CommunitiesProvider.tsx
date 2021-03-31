@@ -3,6 +3,7 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
 } from 'react';
 
 import useCommunitiesQuery from '../hooks/useCommunitiesQuery';
@@ -24,6 +25,11 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
   const [selectedCommunity, setSelectedCommunity] = useState<
     Community | null | undefined
   >();
+
+  // This is just to simulate asynchronously getting the variable from IDB
+  useEffect(() => {
+    setSelectedCommunity(null);
+  }, []);
 
   return (
     <CommunitiesContext.Provider
