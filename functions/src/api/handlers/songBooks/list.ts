@@ -1,4 +1,4 @@
-import { list, SongBookData } from '../../../services/songBook';
+import { list, SongBookSummaryData } from '../../../services/songBook';
 
 import type { RequestHandler } from 'express-serve-static-core';
 
@@ -8,7 +8,7 @@ export interface GetSongBooksQueryParams {
 
 export const getSongBooks: RequestHandler<
   never,
-  SongBookData[],
+  SongBookSummaryData[],
   never,
   GetSongBooksQueryParams,
   Record<string, unknown>
