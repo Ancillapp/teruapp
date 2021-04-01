@@ -1,13 +1,11 @@
 import React, { FunctionComponent } from 'react';
 
-import TopbarLayout, {
-  TopbarLayoutProps,
-} from '../../components/common/TopbarLayout';
+import TopbarLayout from '../../components/common/TopbarLayout';
 import Loader from '../../components/common/Loader';
 
-const SongsList: FunctionComponent<TopbarLayoutProps> = (props) => {
+const SongsList: FunctionComponent = () => {
   return (
-    <TopbarLayout title="Canti" {...props}>
+    <TopbarLayout title="Canti">
       <Loader />
     </TopbarLayout>
   );

@@ -15,13 +15,13 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import darkTheme from '../../themes/dark';
 import lightTheme from '../../themes/light';
 import { useThemeName } from '../../providers/ThemeNameProvider';
+import { useMenu } from '../../providers/MenuProvider';
 
 export interface TopbarLayoutProps {
   title?: ReactNode;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
   topbarContent?: ReactNode;
-  onMenuButtonClick?(): void;
 }
 
 const tweakedDarkTheme = createMuiTheme({
@@ -77,12 +77,13 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
   startAdornment,
   endAdornment,
   topbarContent,
-  onMenuButtonClick,
   children,
 }) => {
   const themeName = useThemeName();
 
   const classes = useStyles();
+
+  const { toggle } = useMenu();
 
   return (
     <div className={classes.root}>
@@ -92,7 +93,7 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
             <IconButton
               edge="start"
               aria-label="menu"
-              onClick={onMenuButtonClick}
+              onClick={() => toggle()}
               className={classes.menuButton}
               color="inherit"
             >

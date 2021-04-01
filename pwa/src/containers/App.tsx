@@ -23,6 +23,7 @@ import itLocale from 'date-fns/locale/it';
 
 import APIProvider from '../providers/APIProvider';
 import CommunitiesProvider from '../providers/CommunitiesProvider';
+import MenuProvider from '../providers/MenuProvider';
 
 const themeColor = document.querySelector<HTMLMetaElement>(
   'meta[name="theme-color"]',
@@ -51,7 +52,9 @@ const App: FunctionComponent = () => {
             <QueryClientProvider client={queryClient}>
               <APIProvider baseUrl={import.meta.env.VITE_API_URL}>
                 <CommunitiesProvider>
-                  <Root />
+                  <MenuProvider>
+                    <Root />
+                  </MenuProvider>
                 </CommunitiesProvider>
               </APIProvider>
             </QueryClientProvider>

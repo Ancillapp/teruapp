@@ -8,9 +8,14 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 
 import { LibraryMusic as LibraryMusicIcon } from '@material-ui/icons';
+
+import { useMenu } from '../../providers/MenuProvider';
+import { Community } from '../../models/community';
 
 const useStyles = makeStyles((theme) => ({
   menuItem: {
@@ -33,19 +38,36 @@ interface MenuItem {
 
 const MENU_ITEMS: MenuItem[] = [
   {
-    key: 'canti',
-    title: 'Canti',
-    link: '/',
+    key: 'libri-canti',
+    title: 'Libri dei canti',
     icon: <LibraryMusicIcon />,
   },
 ];
 
 interface SidebarMenuProps {
+  community: Community;
   onItemClick?(): void;
 }
 
-const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({ onItemClick }) => {
+const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
+  community,
+  onItemClick,
+}) => {
   const classes = useStyles();
+
+  const theme = useTheme();
+
+  const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const { toggle } = useMenu();
+
+  const handleItemClick = () => {
+    if (!isNarrow) {
+      toggle(false);
+    }
+
+    onItemClick?.();
+  };
 
   return (
     <List component="nav">
@@ -54,11 +76,10 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({ onItemClick }) => {
           <ListItem
             button
             component={NavLink}
-            exact={key === 'canti'}
-            to={link || `/${key}`}
+            to={link || `/${community.id}/${key}`}
             className={classes.menuItem}
             activeClassName={classes.active}
-            onClick={onItemClick}
+            onClick={handleItemClick}
           >
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText>{title}</ListItemText>

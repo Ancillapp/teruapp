@@ -15,10 +15,11 @@ import {
 import CommunitySelector from '../../containers/communities/CommunitySelector';
 
 import Logo from './Logo';
+import { useMenu } from '../../providers/MenuProvider';
 
-export interface SidebarLayoutProps extends DrawerProps {
+export interface SidebarLayoutProps
+  extends Omit<DrawerProps, 'open' | 'onClose'> {
   menuContent?: ReactNode;
-  onToggle?(open: boolean): void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -62,9 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
   menuContent,
-  open,
   children,
-  onToggle,
   ...props
 }) => {
   const theme = useTheme();
@@ -73,13 +72,15 @@ const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
 
   const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
 
+  const { open, toggle } = useMenu();
+
   return (
     <div className={classes.root}>
       <Drawer
         anchor="left"
         variant={isNarrow ? 'persistent' : 'temporary'}
         open={open}
-        onClose={() => onToggle?.(false)}
+        onClose={() => toggle(false)}
         {...props}
       >
         <Toolbar className={classes.toolbar}>
