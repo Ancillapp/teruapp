@@ -18,7 +18,7 @@ export interface CommunitiesListParams {
 export const list = async ({ songBook }: CommunitiesListParams = {}) => {
   const communitiesCollection = await getCommunitiesCollection();
 
-  const communities = (await communitiesCollection
+  const communities = ((await communitiesCollection
     .find(
       {
         ...(songBook && {
@@ -37,7 +37,7 @@ export const list = async ({ songBook }: CommunitiesListParams = {}) => {
         },
       },
     )
-    .toArray()) as CommunityData[];
+    .toArray()) as unknown) as CommunityData[];
 
   return communities;
 };

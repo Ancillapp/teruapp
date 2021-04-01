@@ -35,11 +35,11 @@ export const list = async ({ community }: SongBooksListParams = {}) => {
       },
     );
 
-    return ((result?.songBooks || []) as unknown) as SongBookData[];
+    return ((result?.songBooks || []) as unknown) as SongBookSummaryData[];
   } else {
     const songBooksCollection = await getSongBooksCollection();
 
-    const songBooks = (await songBooksCollection
+    const songBooks = ((await songBooksCollection
       .find(
         {},
         {
@@ -50,7 +50,7 @@ export const list = async ({ community }: SongBooksListParams = {}) => {
           },
         },
       )
-      .toArray()) as SongBookData[];
+      .toArray()) as unknown) as SongBookSummaryData[];
 
     return songBooks;
   }

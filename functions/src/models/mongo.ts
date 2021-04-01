@@ -21,12 +21,10 @@ export interface Song extends MongoDBRecord {
 }
 
 export interface SongBook extends MongoDBRecord {
-  id: string;
   title: string;
 }
 
 export interface Community extends MongoDBRecord {
-  id: string;
   name: string;
   songBooks: {
     id: ObjectId;
