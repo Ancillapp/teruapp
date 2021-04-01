@@ -4,12 +4,10 @@ import { Helmet } from 'react-helmet';
 
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
-import { TopbarLayoutProps } from '../../components/common/TopbarLayout';
-
 const SongsList = lazy(() => import('./SongsList'));
 
-const SongsRouter: FunctionComponent<TopbarLayoutProps> = (props) => {
-  const { path } = useRouteMatch();
+const SongsRouter: FunctionComponent = () => {
+  const { url } = useRouteMatch();
 
   return (
     <>
@@ -19,11 +17,11 @@ const SongsRouter: FunctionComponent<TopbarLayoutProps> = (props) => {
       />
 
       <Switch>
-        <Route exact path={path}>
-          <SongsList {...props} />
+        <Route exact path={url}>
+          <SongsList />
         </Route>
 
-        <Redirect to={path} />
+        <Redirect to={url} />
       </Switch>
     </>
   );

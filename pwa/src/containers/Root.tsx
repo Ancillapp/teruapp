@@ -1,33 +1,17 @@
-import React, { Suspense, useState, FunctionComponent, lazy } from 'react';
+import React, { Suspense, FunctionComponent, lazy } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-
-import { useTheme, useMediaQuery } from '@material-ui/core';
 
 import SidebarLayout from '../components/common/SidebarLayout';
 import SidebarMenu from '../components/common/SidebarMenu';
 import Loader from '../components/common/Loader';
 import PageSkeleton from '../components/common/PageSkeleton';
-import { TopbarLayoutProps } from '../components/common/TopbarLayout';
 import { useCommunities } from '../providers/CommunitiesProvider';
 
-import Wizard from './core/Wizard';
-
-const SongsRouter = lazy(() => import('./songs/SongsRouter'));
+const Setup = lazy(() => import('./core/Setup'));
+const SongBooksRouter = lazy(() => import('./songBooks/SongBooksRouter'));
 
 const Root: FunctionComponent = () => {
-  const theme = useTheme();
-
-  const [sidebarOpen, setSidebarOpen] = useState(
-    window.matchMedia(`(min-width:${theme.breakpoints.width('sm')}px)`).matches,
-  );
-
-  const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
-
-  const commonRouteProps: TopbarLayoutProps = {
-    onMenuButtonClick: () => setSidebarOpen(!sidebarOpen),
-  };
-
   const { communities, selectedCommunity } = useCommunities();
 
   if (
@@ -37,28 +21,32 @@ const Root: FunctionComponent = () => {
     return <Loader />;
   }
 
-  return selectedCommunity ? (
+  return (
     <Suspense fallback={<Loader />}>
-      <SidebarLayout
-        menuContent={
-          <SidebarMenu onItemClick={() => !isNarrow && setSidebarOpen(false)} />
-        }
-        open={sidebarOpen}
-        onToggle={setSidebarOpen}
-      >
-        <Suspense fallback={<PageSkeleton />}>
-          <Switch>
-            <Route exact path="/">
-              <SongsRouter {...commonRouteProps} />
-            </Route>
+      {selectedCommunity ? (
+        <SidebarLayout
+          menuContent={<SidebarMenu community={selectedCommunity} />}
+        >
+          <Suspense fallback={<PageSkeleton />}>
+            <Switch>
+              <Route path={`/${selectedCommunity.id}/libri-canti`}>
+                <SongBooksRouter />
+              </Route>
 
-            <Redirect to="/" />
-          </Switch>
-        </Suspense>
-      </SidebarLayout>
+              <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
+            </Switch>
+          </Suspense>
+        </SidebarLayout>
+      ) : (
+        <Switch>
+          <Route exact path="/configurazione">
+            <Setup />
+          </Route>
+
+          <Redirect to="/configurazione" />
+        </Switch>
+      )}
     </Suspense>
-  ) : (
-    <Wizard />
   );
 };
 
