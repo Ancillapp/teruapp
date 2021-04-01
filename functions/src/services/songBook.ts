@@ -1,9 +1,15 @@
-import { mongoDb } from '../helpers/mongo';
-import { SongBook } from '../models/mongo';
+import { mongoDb, ObjectId } from '../helpers/mongo';
+import { Community, SongBook } from '../models/mongo';
 
 export interface SongBookData extends Omit<SongBook, '_id'> {
   id: string;
 }
+
+const getCommunitiesCollection = async () => {
+  const db = await mongoDb;
+
+  return db.collection<Community>('communities');
+};
 
 const getSongBooksCollection = async () => {
   const db = await mongoDb;
@@ -11,21 +17,41 @@ const getSongBooksCollection = async () => {
   return db.collection<SongBook>('songBooks');
 };
 
-export const list = async () => {
-  const songBooksCollection = await getSongBooksCollection();
+export interface SongBooksListParams {
+  community?: string;
+}
 
-  const songBooks = (await songBooksCollection
-    .find(
-      {},
+export const list = async ({ community }: SongBooksListParams = {}) => {
+  if (community) {
+    const communitiesCollection = await getCommunitiesCollection();
+
+    const result = await communitiesCollection.findOne(
+      { _id: new ObjectId(community) },
       {
         projection: {
           _id: 0,
-          id: '$_id',
-          title: 1,
+          songBooks: 1,
         },
       },
-    )
-    .toArray()) as SongBookData[];
+    );
 
-  return songBooks;
+    return ((result?.songBooks || []) as unknown) as SongBookData[];
+  } else {
+    const songBooksCollection = await getSongBooksCollection();
+
+    const songBooks = (await songBooksCollection
+      .find(
+        {},
+        {
+          projection: {
+            _id: 0,
+            id: '$_id',
+            title: 1,
+          },
+        },
+      )
+      .toArray()) as SongBookData[];
+
+    return songBooks;
+  }
 };
