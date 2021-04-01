@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Wizard: FunctionComponent = () => {
+const Setup: FunctionComponent = () => {
   const classes = useStyles();
 
   const { communities = [], setSelectedCommunity } = useCommunities();
@@ -65,7 +65,7 @@ const Wizard: FunctionComponent = () => {
       <div>
         <Typography variant="h4">Ciao!</Typography>
         <Typography variant="h5">
-          Prima di tutto, seleziona la tua comunità
+          Innanzitutto, seleziona la tua comunità
         </Typography>
       </div>
       <TextField
@@ -122,4 +122,4 @@ const Wizard: FunctionComponent = () => {
   );
 };
 
-export default Wizard;
+export default Setup;
