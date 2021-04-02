@@ -12,7 +12,8 @@
     "cors": "^2.8.5",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
-    "mongodb": "^3.6.5"
+    "mongodb": "^3.6.5",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
     "@esbuild-plugins/node-resolve": "^0.0.15",
