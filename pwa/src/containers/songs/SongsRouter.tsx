@@ -7,7 +7,7 @@ import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 const SongsList = lazy(() => import('./SongsList'));
 
 const SongsRouter: FunctionComponent = () => {
-  const { url } = useRouteMatch();
+  const { path, url } = useRouteMatch();
 
   return (
     <>
@@ -17,7 +17,7 @@ const SongsRouter: FunctionComponent = () => {
       />
 
       <Switch>
-        <Route exact path={url}>
+        <Route exact path={path}>
           <SongsList />
         </Route>
 
