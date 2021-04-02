@@ -1,4 +1,4 @@
-import { SongBook } from '../models/songBook';
+import { SongBookSummary } from '../models/songBook';
 
 import useQuery from './useQuery';
 
@@ -7,7 +7,7 @@ export interface SongBooksQueryParams {
 }
 
 const useSongBooksQuery = ({ community }: SongBooksQueryParams = {}) =>
-  useQuery<SongBook[]>(
+  useQuery<SongBookSummary[]>(
     'songbooks',
     community
       ? {
