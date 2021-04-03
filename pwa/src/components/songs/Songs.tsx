@@ -1,8 +1,11 @@
 import React, { FunctionComponent, useCallback } from 'react';
 
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { Link } from 'react-router-dom';
 
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+
+import clsx from 'clsx';
 
 import {
   Card,
@@ -11,8 +14,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
-
-import { Link } from 'react-router-dom';
 
 import { SongBookSong } from '../../models/songBook';
 
@@ -43,12 +44,24 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     margin: theme.spacing(1),
   },
+  mobileSongLink: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  mobileSongTitle: {
+    marginLeft: theme.spacing(1),
+    textAlign: 'left',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   song: {
     padding: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: '0 0 auto',
     width: '100%',
     height: '100%',
     willChange: 'transform',
@@ -69,12 +82,75 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
 
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
-  const SongsRow = useCallback<FunctionComponent<SongsRowProps>>(
+  const songsPerRow = isDesktop ? 5 : 1;
+
+  const MobileSongRow = useCallback<FunctionComponent<SongsRowProps>>(
     ({ style, index, data: { width, height } }) => (
       <div style={style}>
         <div className={classes.songsRow} style={{ height }}>
-          {[...Array(5)].map((_, subindex) => {
-            const song = items[index * 5 + subindex];
+          {[...Array(songsPerRow)].map((_, subindex) => {
+            const song = items[index * songsPerRow + subindex];
+
+            return (
+              song && (
+                <Link
+                  to={`${baseUrl}/${song.id}`}
+                  key={song.id}
+                  className={clsx(classes.songLink, classes.mobileSongLink)}
+                  style={{
+                    width: width - Number(theme.spacing(2).slice(0, -2)),
+                    height: height - Number(theme.spacing(2).slice(0, -2)),
+                  }}
+                >
+                  <Card
+                    className={classes.song}
+                    style={{
+                      width: Math.floor((height / 3) * 2),
+                    }}
+                  >
+                    <Typography
+                      variant={isDesktop ? 'h2' : 'h4'}
+                      component="h4"
+                      align="center"
+                    >
+                      {song.number.replace('bis', 'b')}
+                    </Typography>
+                  </Card>
+                  <Typography
+                    variant="h6"
+                    align="center"
+                    color="primary"
+                    className={classes.mobileSongTitle}
+                  >
+                    {song.title}
+                  </Typography>
+                </Link>
+              )
+            );
+          })}
+        </div>
+      </div>
+    ),
+    [
+      baseUrl,
+      classes.mobileSongLink,
+      classes.mobileSongTitle,
+      classes.song,
+      classes.songLink,
+      classes.songsRow,
+      isDesktop,
+      items,
+      songsPerRow,
+      theme,
+    ],
+  );
+
+  const DesktopSongsRow = useCallback<FunctionComponent<SongsRowProps>>(
+    ({ style, index, data: { width, height } }) => (
+      <div style={style}>
+        <div className={classes.songsRow} style={{ height }}>
+          {[...Array(songsPerRow)].map((_, subindex) => {
+            const song = items[index * songsPerRow + subindex];
 
             return (
               song && (
@@ -95,11 +171,9 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
                     >
                       {song.number.replace('bis', 'b')}
                     </Typography>
-                    {isDesktop && (
-                      <Typography variant="h6" align="center" color="primary">
-                        {song.title}
-                      </Typography>
-                    )}
+                    <Typography variant="h6" align="center" color="primary">
+                      {song.title}
+                    </Typography>
                   </Card>
                 </Link>
               )
@@ -115,6 +189,7 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
       classes.songsRow,
       isDesktop,
       items,
+      songsPerRow,
       theme,
     ],
   );
@@ -125,18 +200,20 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
         {({ width, height }) => {
           const maxWidth = Math.min(width, theme.breakpoints.width('md'));
 
-          const itemWidth = Math.floor(maxWidth / 5);
-          const itemHeight = Math.floor((itemWidth / 2) * 3);
+          const itemWidth = Math.floor(maxWidth / songsPerRow);
+          const itemHeight = Math.floor(
+            (Math.floor(maxWidth / (isDesktop ? songsPerRow : 5)) / 2) * 3,
+          );
 
           return (
             <FixedSizeList
               width={width}
               height={height}
-              itemCount={Math.ceil(items.length / 5)}
+              itemCount={Math.ceil(items.length / songsPerRow)}
               itemSize={itemHeight}
               itemData={{ width: itemWidth, height: itemHeight }}
             >
-              {SongsRow}
+              {isDesktop ? DesktopSongsRow : MobileSongRow}
             </FixedSizeList>
           );
         }}
