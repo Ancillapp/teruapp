@@ -4,7 +4,7 @@ import { useRouteMatch } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { IconButton } from '@material-ui/core';
-import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
+import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
 import Page from '../../components/common/Page';
 import PageSkeleton from '../../components/common/PageSkeleton';

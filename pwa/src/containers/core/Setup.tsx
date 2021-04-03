@@ -13,7 +13,7 @@ import {
   Typography,
   alpha,
 } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
+import { SearchRounded as SearchIcon } from '@material-ui/icons';
 
 import { useCommunities } from '../../providers/CommunitiesProvider';
 import { Community } from '../../models/community';

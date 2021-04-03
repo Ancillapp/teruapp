@@ -10,7 +10,7 @@ import {
   createMuiTheme,
 } from '@material-ui/core';
 
-import { Menu as MenuIcon } from '@material-ui/icons';
+import { MenuRounded as MenuIcon } from '@material-ui/icons';
 
 import darkTheme from '../../themes/dark';
 import lightTheme from '../../themes/light';

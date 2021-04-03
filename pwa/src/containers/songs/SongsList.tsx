@@ -6,7 +6,7 @@ import { FixedSizeGrid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { IconButton, Typography } from '@material-ui/core';
-import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
+import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
 import TopbarLayout from '../../components/common/TopbarLayout';
 import PageSkeleton from '../../components/common/PageSkeleton';
