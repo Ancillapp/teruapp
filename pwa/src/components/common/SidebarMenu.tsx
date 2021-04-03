@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
+  Skeleton,
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
@@ -19,6 +20,8 @@ import {
 
 import { useMenu } from '../../providers/MenuProvider';
 import { Community } from '../../models/community';
+import { useCommunities } from '../../providers/CommunitiesProvider';
+import { SongBookSummary } from '../../models/songBook';
 
 const useStyles = makeStyles((theme) => ({
   upperMenu: { flex: '1 1 auto' },
@@ -36,18 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 interface MenuItem {
   key: string;
-  title: string;
+  title: ReactNode;
   icon: ReactNode;
   link?: string;
 }
 
-const UPPER_MENU_ITEMS: MenuItem[] = [
-  {
-    key: 'libri-canti',
-    title: 'Libri dei canti',
-    icon: <LibraryMusicIcon />,
-  },
-];
+const UPPER_MENU_ITEMS: MenuItem[] = [];
 
 const LOWER_MENU_ITEMS: MenuItem[] = [
   {
@@ -62,6 +59,30 @@ interface SidebarMenuProps {
   onItemClick?(): void;
 }
 
+const getSongBooksMenuItem = (
+  communityId: string,
+  songBooks?: SongBookSummary[],
+) => {
+  const baseMenuItem = { key: 'libri-canti' };
+
+  if (typeof songBooks === 'undefined') {
+    return {
+      ...baseMenuItem,
+      title: <Skeleton variant="text" width={160} />,
+      icon: <Skeleton variant="circular" width={24} height={24} />,
+    };
+  }
+
+  return {
+    ...baseMenuItem,
+    icon: <LibraryMusicIcon />,
+    title: songBooks.length > 1 ? 'Libri dei canti' : 'Canti',
+    link: `/${communityId}/libri-canti${
+      songBooks.length > 1 ? '' : `/${songBooks[0].id}/canti`
+    }`,
+  };
+};
+
 const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
   community,
   onItemClick,
@@ -74,6 +95,8 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
 
   const { toggle } = useMenu();
 
+  const { selectedCommunitySongBooks } = useCommunities();
+
   const handleItemClick = () => {
     if (!isNarrow) {
       toggle(false);
@@ -81,6 +104,11 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
 
     onItemClick?.();
   };
+
+  const upperMenuItems = [
+    getSongBooksMenuItem(community.id, selectedCommunitySongBooks),
+    ...UPPER_MENU_ITEMS,
+  ];
 
   const getMenuItems = (items: MenuItem[]) =>
     items.map(({ key, title, icon, link }) => (
@@ -101,7 +129,7 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
   return (
     <>
       <List component="nav" className={classes.upperMenu}>
-        {getMenuItems(UPPER_MENU_ITEMS)}
+        {getMenuItems(upperMenuItems)}
       </List>
       <List component="nav" className={classes.lowerMenu}>
         <Divider />
