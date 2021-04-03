@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     flexDirection: 'column',
     alignItems: 'flex-start',
+    flex: '0 0 auto',
     padding: theme.spacing(1.5, 2.5),
   },
   logo: {
