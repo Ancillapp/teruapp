@@ -1,8 +1,9 @@
-import React, { ReactNode, FunctionComponent } from 'react';
+import React, { ReactNode, FunctionComponent, Fragment } from 'react';
 
 import { NavLink } from 'react-router-dom';
 
 import {
+  Collapse,
   Divider,
   List,
   ListItem,
@@ -12,6 +13,7 @@ import {
   Skeleton,
   useMediaQuery,
   useTheme,
+  alpha,
 } from '@material-ui/core';
 import {
   LibraryMusicRounded as LibraryMusicIcon,
@@ -36,6 +38,13 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: theme.typography.fontWeightBold,
     },
   },
+  nested: {
+    background: alpha(
+      theme.palette.background.default,
+      theme.palette.mode === 'dark' ? 0.23 : 1,
+    ),
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 interface MenuItem {
@@ -43,6 +52,7 @@ interface MenuItem {
   title: ReactNode;
   icon: ReactNode;
   link?: string;
+  subitems?: Pick<MenuItem, 'key' | 'title' | 'link'>[];
 }
 
 const UPPER_MENU_ITEMS: MenuItem[] = [];
@@ -81,6 +91,11 @@ const getSongBooksMenuItem = (
           icon: <LibraryMusicIcon />,
           title: 'Libri dei canti',
           link: `/${communityId}/libri-canti`,
+          subitems: songBooks.map(({ id, title }) => ({
+            key: `${communityId}-${id}`,
+            title,
+            link: `/${communityId}/libri-canti/${id}/canti`,
+          })),
         }
       : {
           icon: <MusicNoteIcon />,
@@ -118,19 +133,42 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
   ];
 
   const getMenuItems = (items: MenuItem[]) =>
-    items.map(({ key, title, icon, link }) => (
-      <ListItem
-        button
-        key={key}
-        component={NavLink}
-        to={link || `/${community.id}/${key}`}
-        className={classes.menuItem}
-        activeClassName={classes.active}
-        onClick={handleItemClick}
-      >
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText>{title}</ListItemText>
-      </ListItem>
+    items.map(({ key, title, icon, link, subitems = [] }) => (
+      <Fragment key={key}>
+        <ListItem
+          button
+          component={NavLink}
+          to={link || `/${community.id}/${key}`}
+          className={classes.menuItem}
+          activeClassName={classes.active}
+          onClick={handleItemClick}
+          exact={subitems.length > 0}
+        >
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText>{title}</ListItemText>
+        </ListItem>
+        {subitems.length > 0 && (
+          <Collapse in>
+            <List component="div" disablePadding>
+              {subitems.map(
+                ({ key: subkey, title: subtitle, link: sublink }) => (
+                  <ListItem
+                    button
+                    className={classes.nested}
+                    key={`${key}-${subkey}`}
+                    component={NavLink}
+                    to={sublink || `/${community.id}/${key}/${subkey}`}
+                    activeClassName={classes.active}
+                    onClick={handleItemClick}
+                  >
+                    <ListItemText>{subtitle}</ListItemText>
+                  </ListItem>
+                ),
+              )}
+            </List>
+          </Collapse>
+        )}
+      </Fragment>
     ));
 
   return (
