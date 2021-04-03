@@ -60,8 +60,11 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: theme.mixins.toolbar,
   titleContainer: {
-    fontFamily: theme.typography.fontFamily,
     flex: '1 1 auto',
+
+    '& > *': {
+      fontFamily: theme.typography.fontFamily,
+    },
   },
   menu: {
     width: 'min(100vw - 56px, 280px)',
