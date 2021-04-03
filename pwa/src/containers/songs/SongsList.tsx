@@ -2,9 +2,6 @@ import React, { FunctionComponent } from 'react';
 
 import { Link, useRouteMatch } from 'react-router-dom';
 
-import { FixedSizeGrid } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
-
 import { IconButton, Typography } from '@material-ui/core';
 import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
@@ -12,8 +9,7 @@ import TopbarLayout from '../../components/common/TopbarLayout';
 import PageSkeleton from '../../components/common/PageSkeleton';
 import useSongBookQuery from '../../hooks/data/useSongBookQuery';
 import TopbarIcon from '../../components/common/TopbarIcon';
-import SongCard from '../../components/songs/SongCard';
-import CenteredLayout from '../../components/common/CenteredLayout';
+import Songs from '../../components/songs/Songs';
 import { useCommunities } from '../../providers/CommunitiesProvider';
 
 const SongsList: FunctionComponent = () => {
@@ -43,44 +39,13 @@ const SongsList: FunctionComponent = () => {
         ) : undefined
       }
     >
-      <CenteredLayout>
-        {data.songs.length > 0 ? (
-          <AutoSizer>
-            {({ width, height }) => {
-              const itemWidth = Math.floor(width / 5);
-              const itemHeight = Math.floor((itemWidth / 2) * 3);
-
-              return (
-                <FixedSizeGrid
-                  width={width}
-                  height={height}
-                  columnCount={5}
-                  rowCount={Math.ceil(data.songs.length / 5)}
-                  columnWidth={itemWidth}
-                  rowHeight={itemHeight}
-                >
-                  {({ rowIndex, columnIndex, style }) => {
-                    const song = data.songs[rowIndex * 5 + columnIndex];
-
-                    return song ? (
-                      <SongCard
-                        key={song.id}
-                        baseUrl={url}
-                        song={song}
-                        style={style}
-                      />
-                    ) : null;
-                  }}
-                </FixedSizeGrid>
-              );
-            }}
-          </AutoSizer>
-        ) : (
-          <Typography variant="subtitle2" padding={2}>
-            Nessun risultato.
-          </Typography>
-        )}
-      </CenteredLayout>
+      {data.songs.length > 0 ? (
+        <Songs baseUrl={url} items={data.songs} />
+      ) : (
+        <Typography variant="subtitle2" padding={2}>
+          Nessun risultato.
+        </Typography>
+      )}
     </TopbarLayout>
   );
 };
