@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
-import Page from '../../components/common/Page';
 import PageSkeleton from '../../components/common/PageSkeleton';
 import TopbarIcon from '../../components/common/TopbarIcon';
 import TopbarLayout from '../../components/common/TopbarLayout';
 import useSongQuery from '../../hooks/data/useSongQuery';
+import SongTitle from '../../components/songs/SongTitle';
+import SongLyrics from '../../components/songs/SongLyrics';
 
 const SongDetails: FunctionComponent = () => {
   const {
@@ -23,7 +24,7 @@ const SongDetails: FunctionComponent = () => {
     <PageSkeleton />
   ) : (
     <TopbarLayout
-      title={`${data.number}. ${data.title}`}
+      title={<SongTitle song={data} />}
       startAdornment={
         <TopbarIcon sx={{ mr: 0.5 }}>
           <Link to="..">
@@ -34,7 +35,7 @@ const SongDetails: FunctionComponent = () => {
         </TopbarIcon>
       }
     >
-      <Page>{data.content}</Page>
+      <SongLyrics song={data} />
     </TopbarLayout>
   );
 };
