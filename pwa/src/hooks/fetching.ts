@@ -31,7 +31,7 @@ const configureRequest = <
   path = '',
   query,
 }: RequestParams<B, P, Q> = {}): Promise<T> => {
-  const mergedUrl = new URL(path, url).toString();
+  const mergedUrl = `${url}/${path}`;
 
   const urlWithParams =
     options.query || query
@@ -74,7 +74,7 @@ export const useQuery = <T>(
 ): UseQueryValue<T> => {
   const { baseUrl } = useAPI();
 
-  const mergedUrl = new URL(url, baseUrl).toString();
+  const mergedUrl = `${baseUrl}/${url}`;
 
   const performRequest = useMemo(
     () => configureRequest<T>(mergedUrl, options),
@@ -98,11 +98,11 @@ export const useQuery = <T>(
 
       throw error;
     }
-  }, []);
+  }, [performRequest]);
 
   useEffect(() => {
     refetch().catch(() => undefined);
-  }, []);
+  }, [refetch]);
 
   return {
     ...queryValue,
@@ -141,7 +141,7 @@ export const useLazyQuery = <
 ): UseLazyQueryValue<T, B, P, Q> => {
   const { baseUrl } = useAPI();
 
-  const mergedUrl = new URL(url, baseUrl).toString();
+  const mergedUrl = `${baseUrl}/${url}`;
 
   const performRequest = useMemo(
     () => configureRequest<T, B, P, Q>(mergedUrl, options),
@@ -167,7 +167,7 @@ export const useLazyQuery = <
         throw error;
       }
     },
-    [],
+    [performRequest],
   );
 
   return [request, queryValue];
