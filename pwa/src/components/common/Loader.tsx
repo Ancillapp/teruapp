@@ -49,7 +49,7 @@ const Loader: FunctionComponent<LoaderProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      {props.variant === 'linear' ? (
+      {variant === 'linear' ? (
         <LinearProgress {...(otherProps as LinearProgressProps)} />
       ) : (
         <CircularProgress {...(otherProps as CircularProgressProps)} />

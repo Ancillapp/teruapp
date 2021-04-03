@@ -26,7 +26,7 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
 
   const [getSongBooks] = useSongBooksLazyQuery();
 
-  // TODO: store this value in indexedDB
+  // TODO: store this value in IndexedDB
   const [selectedCommunity, setSelectedCommunity] = useState<
     Community | null | undefined
   >();
@@ -51,7 +51,7 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
     };
 
     updateSongBooks();
-  }, [selectedCommunity]);
+  }, [getSongBooks, selectedCommunity]);
 
   return (
     <CommunitiesContext.Provider

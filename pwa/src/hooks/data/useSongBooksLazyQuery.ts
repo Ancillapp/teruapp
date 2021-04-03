@@ -31,7 +31,7 @@ const useSongBooksLazyQuery = (): [
             }
           : undefined,
       ),
-    [],
+    [getSongBooks],
   );
 
   return [query, data];
