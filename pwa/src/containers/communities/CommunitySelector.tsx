@@ -41,6 +41,7 @@ const CommunitySelector: FunctionComponent = () => {
         <TextField
           label="Comunità"
           {...textFieldProps}
+          {...(selectedCommunity && { title: selectedCommunity.name })}
           inputProps={{
             ...textFieldProps.inputProps,
             className: clsx(textFieldProps.inputProps.className, classes.input),
