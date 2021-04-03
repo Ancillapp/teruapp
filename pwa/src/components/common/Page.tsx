@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
 
-import clsx from 'clsx';
-
 import { Box, BoxProps, makeStyles, Theme } from '@material-ui/core';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 
@@ -24,13 +22,14 @@ const useStyles = makeStyles<Theme, PageProps>((theme) => ({
     },
 
     '& > *': {
-      padding: '2rem 3rem',
+      padding: '1rem 1.5rem',
       background: theme.palette.background.paper,
       width: '100%',
       maxWidth: typeof size === 'number' ? size : theme.breakpoints.width(size),
       margin: '0 auto',
 
       [theme.breakpoints.up('md')]: {
+        padding: '2rem 3rem',
         borderRadius: '.5rem',
         boxShadow:
           '0 .06rem .065rem 0 rgba(0, 0, 0, 0.14), 0 .003rem .15rem 0 rgba(0, 0, 0, 0.12), 0 .09rem .0035rem -.065rem rgba(0, 0, 0, 0.2)',
@@ -39,16 +38,14 @@ const useStyles = makeStyles<Theme, PageProps>((theme) => ({
   }),
 }));
 
-const Page: FunctionComponent<PageProps> = ({
-  children,
-  className,
-  ...props
-}) => {
+const Page: FunctionComponent<PageProps> = ({ children, ...props }) => {
   const classes = useStyles(props);
 
   return (
-    <Box className={clsx(classes.root, className)} {...props}>
-      <Box component="section">{children}</Box>
+    <Box className={classes.root}>
+      <Box component="section" {...props}>
+        {children}
+      </Box>
     </Box>
   );
 };
