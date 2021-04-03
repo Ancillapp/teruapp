@@ -14,8 +14,9 @@ import {
   useTheme,
 } from '@material-ui/core';
 import {
-  LibraryMusic as LibraryMusicIcon,
-  InfoOutlined as InfoOutlinedIcon,
+  LibraryMusicRounded as LibraryMusicIcon,
+  MusicNoteRounded as MusicNoteIcon,
+  InfoOutlined as InfoIcon,
 } from '@material-ui/icons';
 
 import { useMenu } from '../../providers/MenuProvider';
@@ -50,7 +51,7 @@ const LOWER_MENU_ITEMS: MenuItem[] = [
   {
     key: 'informazioni',
     title: 'Informazioni',
-    icon: <InfoOutlinedIcon />,
+    icon: <InfoIcon />,
   },
 ];
 
@@ -75,11 +76,17 @@ const getSongBooksMenuItem = (
 
   return {
     ...baseMenuItem,
-    icon: <LibraryMusicIcon />,
-    title: songBooks.length > 1 ? 'Libri dei canti' : 'Canti',
-    link: `/${communityId}/libri-canti${
-      songBooks.length > 1 ? '' : `/${songBooks[0].id}/canti`
-    }`,
+    ...(songBooks.length > 1
+      ? {
+          icon: <LibraryMusicIcon />,
+          title: 'Libri dei canti',
+          link: `/${communityId}/libri-canti`,
+        }
+      : {
+          icon: <MusicNoteIcon />,
+          title: 'Canti',
+          link: `/${communityId}/libri-canti/${songBooks[0].id}/canti`,
+        }),
   };
 };
 
