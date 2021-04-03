@@ -71,10 +71,21 @@ export const get = async (id: string) => {
     ? {
         id: songBook._id.toHexString(),
         title: songBook.title,
-        songs: songs.map(({ songBooks, ...rest }) => ({
-          ...rest,
-          number: songBooks[0].number,
-        })),
+        songs: songs
+          .map(({ songBooks, ...rest }) => ({
+            ...rest,
+            number: songBooks[0].number,
+          }))
+          .sort(({ number: a }, { number: b }) => {
+            const normalizedA = a.replace('bis', '').padStart(10, '0');
+            const normalizedB = b.replace('bis', '').padStart(10, '0');
+
+            if (normalizedA === normalizedB) {
+              return b.includes('bis') ? -1 : 1;
+            }
+
+            return normalizedA < normalizedB ? -1 : 1;
+          }),
       }
     : null;
 };
