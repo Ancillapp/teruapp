@@ -11,7 +11,7 @@ export interface RequestInitWithQueryParams extends RequestInit {
 export interface RequestParams<
   B = undefined,
   P extends string | undefined = undefined,
-  Q extends Record<string, unknown> | undefined = undefined
+  Q = undefined
 > {
   body?: B;
   query?: Q;
@@ -22,7 +22,7 @@ const configureRequest = <
   T = undefined,
   B = undefined,
   P extends string | undefined = undefined,
-  Q extends Record<string, unknown> | undefined = undefined
+  Q = undefined
 >(
   url: string,
   options: RequestInitWithQueryParams = {},
@@ -108,4 +108,67 @@ export const useQuery = <T>(
     ...queryValue,
     refetch,
   };
+};
+
+export type UseLazyQueryGetFunction<
+  T = undefined,
+  B = undefined,
+  P extends string | undefined = undefined,
+  Q = undefined
+> = (params?: RequestParams<B, P, Q>) => Promise<T>;
+
+export interface UseLazyQueryResult<T> {
+  loading: boolean;
+  data?: T;
+  error?: Error;
+}
+
+export type UseLazyQueryValue<
+  T = undefined,
+  B = undefined,
+  P extends string | undefined = undefined,
+  Q = undefined
+> = [UseLazyQueryGetFunction<T, B, P, Q>, UseLazyQueryResult<T>];
+
+export const useLazyQuery = <
+  T = undefined,
+  B = undefined,
+  P extends string | undefined = undefined,
+  Q = undefined
+>(
+  url: string,
+  options: RequestInitWithQueryParams = {},
+): UseLazyQueryValue<T, B, P, Q> => {
+  const { baseUrl } = useAPI();
+
+  const mergedUrl = new URL(url, baseUrl).toString();
+
+  const performRequest = useMemo(
+    () => configureRequest<T, B, P, Q>(mergedUrl, options),
+    [mergedUrl, options],
+  );
+
+  const [queryValue, setQueryValue] = useState<
+    Omit<UseQueryValue<T>, 'refetch'>
+  >({ loading: true });
+
+  const request = useCallback<UseLazyQueryGetFunction<T, B, P, Q>>(
+    async (params) => {
+      setQueryValue({ loading: true });
+
+      try {
+        const data = await performRequest(params);
+        setQueryValue({ loading: false, data });
+
+        return data;
+      } catch (error) {
+        setQueryValue({ loading: false, error });
+
+        throw error;
+      }
+    },
+    [],
+  );
+
+  return [request, queryValue];
 };
