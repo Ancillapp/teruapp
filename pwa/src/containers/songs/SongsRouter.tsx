@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 const SongsList = lazy(() => import('./SongsList'));
+const SongDetails = lazy(() => import('./SongDetails'));
 
 const SongsRouter: FunctionComponent = () => {
   const { path, url } = useRouteMatch();
@@ -19,6 +20,10 @@ const SongsRouter: FunctionComponent = () => {
       <Switch>
         <Route exact path={path}>
           <SongsList />
+        </Route>
+
+        <Route exact path={`${path}/:songId`}>
+          <SongDetails />
         </Route>
 
         <Redirect to={url} />
