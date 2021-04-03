@@ -11,7 +11,8 @@
     "start:pwa": "yarn workspace @teruapp/pwa start",
     "build:pwa": "yarn workspace @teruapp/pwa run build",
     "start:functions": "yarn workspace @teruapp/functions start",
-    "build:functions": "yarn workspace @teruapp/functions run build"
+    "build:functions": "yarn workspace @teruapp/functions run build",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx functions/src pwa/src"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.14.1",
