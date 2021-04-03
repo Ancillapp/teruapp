@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
   },
   menu: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     width: 'min(100vw - 56px, 280px)',
 
     [theme.breakpoints.up('sm')]: {

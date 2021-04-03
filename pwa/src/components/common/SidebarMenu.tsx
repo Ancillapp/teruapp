@@ -1,8 +1,9 @@
-import React, { ReactNode, FunctionComponent, Fragment } from 'react';
+import React, { ReactNode, FunctionComponent } from 'react';
 
 import { NavLink } from 'react-router-dom';
 
 import {
+  Divider,
   List,
   ListItem,
   ListItemIcon,
@@ -11,13 +12,17 @@ import {
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
-
-import { LibraryMusic as LibraryMusicIcon } from '@material-ui/icons';
+import {
+  LibraryMusic as LibraryMusicIcon,
+  InfoOutlined as InfoOutlinedIcon,
+} from '@material-ui/icons';
 
 import { useMenu } from '../../providers/MenuProvider';
 import { Community } from '../../models/community';
 
 const useStyles = makeStyles((theme) => ({
+  upperMenu: { flex: '1 1 auto' },
+  lowerMenu: { flex: '0 0 auto' },
   menuItem: {
     paddingLeft: theme.spacing(2.5),
   },
@@ -36,11 +41,19 @@ interface MenuItem {
   link?: string;
 }
 
-const MENU_ITEMS: MenuItem[] = [
+const UPPER_MENU_ITEMS: MenuItem[] = [
   {
     key: 'libri-canti',
     title: 'Libri dei canti',
     icon: <LibraryMusicIcon />,
+  },
+];
+
+const LOWER_MENU_ITEMS: MenuItem[] = [
+  {
+    key: 'informazioni',
+    title: 'Informazioni',
+    icon: <InfoOutlinedIcon />,
   },
 ];
 
@@ -69,24 +82,32 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
     onItemClick?.();
   };
 
+  const getMenuItems = (items: MenuItem[]) =>
+    items.map(({ key, title, icon, link }) => (
+      <ListItem
+        button
+        key={key}
+        component={NavLink}
+        to={link || `/${community.id}/${key}`}
+        className={classes.menuItem}
+        activeClassName={classes.active}
+        onClick={handleItemClick}
+      >
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText>{title}</ListItemText>
+      </ListItem>
+    ));
+
   return (
-    <List component="nav">
-      {MENU_ITEMS.map(({ key, title, icon, link }) => (
-        <Fragment key={key}>
-          <ListItem
-            button
-            component={NavLink}
-            to={link || `/${community.id}/${key}`}
-            className={classes.menuItem}
-            activeClassName={classes.active}
-            onClick={handleItemClick}
-          >
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText>{title}</ListItemText>
-          </ListItem>
-        </Fragment>
-      ))}
-    </List>
+    <>
+      <List component="nav" className={classes.upperMenu}>
+        {getMenuItems(UPPER_MENU_ITEMS)}
+      </List>
+      <List component="nav" className={classes.lowerMenu}>
+        <Divider />
+        {getMenuItems(LOWER_MENU_ITEMS)}
+      </List>
+    </>
   );
 };
 
