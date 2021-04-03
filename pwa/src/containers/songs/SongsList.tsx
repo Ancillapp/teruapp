@@ -10,10 +10,11 @@ import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 
 import TopbarLayout from '../../components/common/TopbarLayout';
 import PageSkeleton from '../../components/common/PageSkeleton';
-import useSongBookQuery from '../../hooks/useSongBookQuery';
+import useSongBookQuery from '../../hooks/data/useSongBookQuery';
 import TopbarIcon from '../../components/common/TopbarIcon';
 import SongCard from '../../components/songs/SongCard';
 import CenteredLayout from '../../components/common/CenteredLayout';
+import { useCommunities } from '../../providers/CommunitiesProvider';
 
 const SongsList: FunctionComponent = () => {
   const {
@@ -21,21 +22,25 @@ const SongsList: FunctionComponent = () => {
     params: { songBookId },
   } = useRouteMatch<{ songBookId: string }>();
 
+  const { selectedCommunitySongBooks } = useCommunities();
+
   const { loading, data } = useSongBookQuery(songBookId);
 
-  return loading || !data ? (
+  return loading || !data || !selectedCommunitySongBooks ? (
     <PageSkeleton />
   ) : (
     <TopbarLayout
       title={data.title}
       startAdornment={
-        <TopbarIcon sx={{ mr: 0.5 }}>
-          <Link to="..">
-            <IconButton color="inherit" edge="start" aria-label="indietro">
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
-        </TopbarIcon>
+        selectedCommunitySongBooks.length > 1 ? (
+          <TopbarIcon sx={{ mr: 0.5 }}>
+            <Link to="..">
+              <IconButton color="inherit" edge="start" aria-label="indietro">
+                <ArrowBackIcon />
+              </IconButton>
+            </Link>
+          </TopbarIcon>
+        ) : undefined
       }
     >
       <CenteredLayout>
