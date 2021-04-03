@@ -23,6 +23,7 @@ export interface Song extends MongoDBRecord {
 
 export interface SongBook extends MongoDBRecord {
   title: string;
+  published?: boolean;
 }
 
 export interface Community extends MongoDBRecord {
