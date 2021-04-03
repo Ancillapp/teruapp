@@ -137,7 +137,7 @@ export const useLazyQuery = <
   Q = undefined
 >(
   url: string,
-  options: RequestInitWithQueryParams = {},
+  options?: RequestInitWithQueryParams,
 ): UseLazyQueryValue<T, B, P, Q> => {
   const { baseUrl } = useAPI();
 
