@@ -22,31 +22,42 @@ const Root: FunctionComponent = () => {
   }
 
   return (
-    <Suspense fallback={<Loader />}>
-      {selectedCommunity ? (
-        <SidebarLayout
-          menuContent={<SidebarMenu community={selectedCommunity} />}
-        >
-          <Suspense fallback={<PageSkeleton />}>
-            <Switch>
-              <Route path={`/${selectedCommunity.id}/libri-canti`}>
-                <SongBooksRouter />
-              </Route>
+    <Switch>
+      <Route
+        path="/:url*(/+)"
+        exact
+        strict
+        render={(props) => (
+          <Redirect to={`${props.location.pathname.slice(0, -1)}`} />
+        )}
+      />
 
-              <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
-            </Switch>
-          </Suspense>
-        </SidebarLayout>
-      ) : (
-        <Switch>
-          <Route exact path="/configurazione">
-            <Setup />
-          </Route>
+      <Suspense fallback={<Loader />}>
+        {selectedCommunity ? (
+          <SidebarLayout
+            menuContent={<SidebarMenu community={selectedCommunity} />}
+          >
+            <Suspense fallback={<PageSkeleton />}>
+              <Switch>
+                <Route path={`/${selectedCommunity.id}/libri-canti`}>
+                  <SongBooksRouter />
+                </Route>
 
-          <Redirect to="/configurazione" />
-        </Switch>
-      )}
-    </Suspense>
+                <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
+              </Switch>
+            </Suspense>
+          </SidebarLayout>
+        ) : (
+          <Switch>
+            <Route exact path="/configurazione">
+              <Setup />
+            </Route>
+
+            <Redirect to="/configurazione" />
+          </Switch>
+        )}
+      </Suspense>
+    </Switch>
   );
 };
 

@@ -27,7 +27,7 @@ const SongDetails: FunctionComponent = () => {
       title={<SongTitle song={data} />}
       startAdornment={
         <TopbarIcon sx={{ mr: 0.5 }}>
-          <Link to="..">
+          <Link to=".">
             <IconButton color="inherit" edge="start" aria-label="indietro">
               <ArrowBackIcon />
             </IconButton>
