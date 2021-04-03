@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 
 import { SongBookSong } from '../../models/songBook';
+import { joinUrls } from '../../helpers/url';
 
 export interface SongsProps {
   baseUrl: string;
@@ -94,7 +95,7 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
             return (
               song && (
                 <Link
-                  to={`${baseUrl}/${song.id}`}
+                  to={joinUrls(baseUrl, song.id)}
                   key={song.id}
                   className={clsx(classes.songLink, classes.mobileSongLink)}
                   style={{
@@ -155,7 +156,7 @@ const Songs: FunctionComponent<SongsProps> = ({ baseUrl, items }) => {
             return (
               song && (
                 <Link
-                  to={`${baseUrl}/${song.id}`}
+                  to={joinUrls(baseUrl, song.id)}
                   key={song.id}
                   className={classes.songLink}
                   style={{

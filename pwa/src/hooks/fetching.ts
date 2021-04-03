@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { toQueryParams } from '../helpers/query';
+import { joinUrls, toQueryParams } from '../helpers/url';
 import { useAPI } from '../providers/APIProvider';
 
 export interface RequestInitWithQueryParams extends RequestInit {
@@ -31,7 +31,7 @@ const configureRequest = <
   path = '',
   query,
 }: RequestParams<B, P, Q> = {}): Promise<T> => {
-  const mergedUrl = `${url}/${path}`;
+  const mergedUrl = joinUrls(url, path);
 
   const urlWithParams =
     options.query || query
@@ -74,7 +74,7 @@ export const useQuery = <T>(
 ): UseQueryValue<T> => {
   const { baseUrl } = useAPI();
 
-  const mergedUrl = `${baseUrl}/${url}`;
+  const mergedUrl = joinUrls(baseUrl, url);
 
   const performRequest = useMemo(
     () => configureRequest<T>(mergedUrl, options),
@@ -141,7 +141,7 @@ export const useLazyQuery = <
 ): UseLazyQueryValue<T, B, P, Q> => {
   const { baseUrl } = useAPI();
 
-  const mergedUrl = `${baseUrl}/${url}`;
+  const mergedUrl = joinUrls(baseUrl, url);
 
   const performRequest = useMemo(
     () => configureRequest<T, B, P, Q>(mergedUrl, options),

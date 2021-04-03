@@ -19,3 +19,8 @@ export const mergeQueryParams = (
 
   return newParams;
 };
+
+export const joinUrls = (...urlParts: string[]) =>
+  urlParts
+    .map((part) => (part.endsWith('/') ? part.slice(0, -1) : part))
+    .join('/');
