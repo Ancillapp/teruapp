@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(0.5),
   },
   toolbar: theme.mixins.toolbar,
-  title: {
+  titleContainer: {
     fontFamily: theme.typography.fontFamily,
     flex: '1 1 auto',
   },
@@ -102,9 +102,13 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
           ) : (
             startAdornment
           )}
-          <Typography variant="h6" className={classes.title}>
-            {title}
-          </Typography>
+          <div className={classes.titleContainer}>
+            {typeof title === 'string' ? (
+              <Typography variant="h6">{title}</Typography>
+            ) : (
+              title
+            )}
+          </div>
           {endAdornment}
         </Toolbar>
 
