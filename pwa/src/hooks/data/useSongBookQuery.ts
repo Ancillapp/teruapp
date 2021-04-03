@@ -1,6 +1,6 @@
-import { SongBook } from '../models/songBook';
+import { SongBook } from '../../models/songBook';
 
-import useQuery from './useQuery';
+import { useQuery } from '../fetching';
 
 const useSongBookQuery = (id: string) => useQuery<SongBook>(`songbooks/${id}`);
 

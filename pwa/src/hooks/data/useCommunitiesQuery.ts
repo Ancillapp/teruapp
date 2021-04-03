@@ -1,6 +1,6 @@
-import { Community } from '../models/community';
+import { Community } from '../../models/community';
 
-import useQuery from './useQuery';
+import { useQuery } from '../fetching';
 
 const useCommunitiesQuery = () => useQuery<Community[]>('communities');
 

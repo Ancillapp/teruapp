@@ -1,6 +1,6 @@
-import { SongBookSummary } from '../models/songBook';
+import { SongBookSummary } from '../../models/songBook';
 
-import useQuery from './useQuery';
+import { useQuery } from '../fetching';
 
 export interface SongBooksQueryParams {
   community?: string;

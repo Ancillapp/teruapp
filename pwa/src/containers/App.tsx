@@ -2,8 +2,6 @@ import React, { FunctionComponent, useEffect } from 'react';
 
 import { Helmet } from 'react-helmet';
 
-import { QueryClientProvider, QueryClient } from 'react-query';
-
 import { BrowserRouter } from 'react-router-dom';
 
 import {
@@ -29,8 +27,6 @@ const themeColor = document.querySelector<HTMLMetaElement>(
   'meta[name="theme-color"]',
 );
 
-const queryClient = new QueryClient();
-
 const App: FunctionComponent = () => {
   const themeName = useThemeName();
 
@@ -49,15 +45,13 @@ const App: FunctionComponent = () => {
           <Helmet defaultTitle="Teruapp" titleTemplate="Teruapp - %s" />
           <CssBaseline />
           <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-              <APIProvider baseUrl={import.meta.env.VITE_API_URL}>
-                <CommunitiesProvider>
-                  <MenuProvider>
-                    <Root />
-                  </MenuProvider>
-                </CommunitiesProvider>
-              </APIProvider>
-            </QueryClientProvider>
+            <APIProvider baseUrl={import.meta.env.VITE_API_URL}>
+              <CommunitiesProvider>
+                <MenuProvider>
+                  <Root />
+                </MenuProvider>
+              </CommunitiesProvider>
+            </APIProvider>
           </BrowserRouter>
         </LocalizationProvider>
       </ThemeProvider>
