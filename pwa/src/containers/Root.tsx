@@ -10,6 +10,7 @@ import { useCommunities } from '../providers/CommunitiesProvider';
 
 const Setup = lazy(() => import('./core/Setup'));
 const SongBooksRouter = lazy(() => import('./songBooks/SongBooksRouter'));
+const Info = lazy(() => import('./core/Info'));
 
 const Root: FunctionComponent = () => {
   const { selectedCommunity } = useCommunities();
@@ -38,6 +39,10 @@ const Root: FunctionComponent = () => {
               <Switch>
                 <Route path={`/${selectedCommunity.id}/libri-canti`}>
                   <SongBooksRouter />
+                </Route>
+
+                <Route path="/informazioni">
+                  <Info />
                 </Route>
 
                 <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
