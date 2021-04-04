@@ -138,7 +138,7 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
         <ListItem
           button
           component={NavLink}
-          to={link || `/${community.id}/${key}`}
+          to={link || `/${key}`}
           className={classes.menuItem}
           activeClassName={classes.active}
           onClick={handleItemClick}
@@ -157,7 +157,7 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
                     className={classes.nested}
                     key={`${key}-${subkey}`}
                     component={NavLink}
-                    to={sublink || `/${community.id}/${key}/${subkey}`}
+                    to={sublink || `/${key}/${subkey}`}
                     activeClassName={classes.active}
                     onClick={handleItemClick}
                   >
