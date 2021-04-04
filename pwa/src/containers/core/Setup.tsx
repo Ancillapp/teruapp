@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useMemo, useState } from 'react';
 
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
   alpha,
+  Skeleton,
 } from '@material-ui/core';
 import { SearchRounded as SearchIcon } from '@material-ui/icons';
 
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const Setup: FunctionComponent = () => {
   const classes = useStyles();
 
-  const { communities = [], setSelectedCommunity } = useCommunities();
+  const { communities, setSelectedCommunity } = useCommunities();
 
   const [currentCommunity, setCurrentCommunity] = useState<Community | null>(
     null,
@@ -58,7 +59,13 @@ const Setup: FunctionComponent = () => {
 
   const [search, setSearch] = useState('');
 
-  const filteredCommunities = useFullTextSearch(communities, ['name'], search);
+  const communitiesToFilter = useMemo(() => communities || [], [communities]);
+
+  const filteredCommunities = useFullTextSearch(
+    communitiesToFilter,
+    ['name'],
+    search,
+  );
 
   return (
     <div className={classes.root}>
@@ -76,30 +83,38 @@ const Setup: FunctionComponent = () => {
         onChange={(event) => setSearch(event.target.value)}
       />
       <div className={classes.list}>
-        {filteredCommunities.length > 0 ? (
+        {!communities || filteredCommunities.length > 0 ? (
           <AutoSizer>
             {({ width, height }) => (
               <FixedSizeList
                 width={width}
                 height={height}
                 itemSize={46}
-                itemCount={filteredCommunities.length}
+                itemCount={communities ? filteredCommunities.length : 50}
               >
-                {({ index, style }) => (
-                  <ListItem
-                    button
-                    style={style}
-                    key={filteredCommunities[index].id}
-                    selected={
-                      currentCommunity?.id === filteredCommunities[index].id
-                    }
-                    onClick={() =>
-                      setCurrentCommunity(filteredCommunities[index])
-                    }
-                  >
-                    <ListItemText primary={filteredCommunities[index].name} />
-                  </ListItem>
-                )}
+                {({ index, style }) =>
+                  communities ? (
+                    <ListItem
+                      button
+                      style={style}
+                      key={filteredCommunities[index].id}
+                      selected={
+                        currentCommunity?.id === filteredCommunities[index].id
+                      }
+                      onClick={() =>
+                        setCurrentCommunity(filteredCommunities[index])
+                      }
+                    >
+                      <ListItemText primary={filteredCommunities[index].name} />
+                    </ListItem>
+                  ) : (
+                    <ListItem button style={style} key={index}>
+                      <ListItemText
+                        primary={<Skeleton variant="text" width={240} />}
+                      />
+                    </ListItem>
+                  )
+                }
               </FixedSizeList>
             )}
           </AutoSizer>

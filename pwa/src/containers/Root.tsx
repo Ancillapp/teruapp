@@ -12,12 +12,9 @@ const Setup = lazy(() => import('./core/Setup'));
 const SongBooksRouter = lazy(() => import('./songBooks/SongBooksRouter'));
 
 const Root: FunctionComponent = () => {
-  const { communities, selectedCommunity } = useCommunities();
+  const { selectedCommunity } = useCommunities();
 
-  if (
-    typeof communities === 'undefined' ||
-    typeof selectedCommunity === 'undefined'
-  ) {
+  if (typeof selectedCommunity === 'undefined') {
     return <Loader />;
   }
 

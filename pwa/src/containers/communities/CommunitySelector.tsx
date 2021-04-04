@@ -24,7 +24,7 @@ const CommunitySelector: FunctionComponent = () => {
   const classes = useStyles();
 
   const {
-    communities = [],
+    communities,
     selectedCommunity = null,
     setSelectedCommunity,
   } = useCommunities();
@@ -34,7 +34,7 @@ const CommunitySelector: FunctionComponent = () => {
       size="small"
       fullWidth
       disableClearable
-      options={communities}
+      options={communities || []}
       value={selectedCommunity as Community}
       onChange={(_, newCommunity) => setSelectedCommunity(newCommunity)}
       renderInput={(textFieldProps) => (
@@ -59,6 +59,7 @@ const CommunitySelector: FunctionComponent = () => {
       )}
       getOptionLabel={({ name }) => name}
       getOptionSelected={(option, value) => option.id === value.id}
+      disabled={!communities}
     />
   );
 };

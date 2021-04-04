@@ -42,6 +42,8 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
 
   useEffect(() => {
     const updateSongBooks = async () => {
+      setSelectedCommunitySongBooks(undefined);
+
       if (selectedCommunity) {
         const songBooks = await getSongBooks({
           community: selectedCommunity.id,
