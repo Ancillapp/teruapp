@@ -21,6 +21,14 @@ const useStyles = makeStyles<Theme, PageProps>((theme) => ({
       width: `calc(100% - ${theme.spacing(6)})`,
     },
 
+    '& p': {
+      textAlign: 'justify',
+    },
+
+    '& h1, h2, h3, h4, h5, h6': {
+      margin: '0.75rem 0 0.25rem',
+    },
+
     '& > *': {
       padding: '1rem 1.5rem',
       background: theme.palette.background.paper,

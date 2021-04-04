@@ -1,4 +1,6 @@
-const themeBase = {
+import { ThemeOptions } from '@material-ui/core';
+
+const themeBase: ThemeOptions = {
   typography: {
     fontFamily: "'Rubik', sans-serif",
     h1: { fontFamily: "'Averia Serif Libre', serif" },

@@ -28,7 +28,7 @@ const tweakedDarkTheme = createMuiTheme({
   ...darkTheme,
   palette: {
     ...darkTheme.palette,
-    primary: { main: '#424242' },
+    primary: { main: '#2a2a2a' },
   },
 });
 
@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     flex: '0 0 auto',
+    zIndex: 10,
   },
   content: {
     flex: '1 1 auto',
@@ -64,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
     '& > *': {
       fontFamily: theme.typography.fontFamily,
+      margin: 0,
     },
   },
   menu: {

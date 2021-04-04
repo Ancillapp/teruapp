@@ -27,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     minHeight: '100%',
   },
+  drawerPaper: {
+    ...(theme.palette.mode === 'dark' && {
+      background: '#2a2a2a',
+    }),
+  },
   toolbar: {
     ...theme.mixins.toolbar,
     flexDirection: 'column',
@@ -69,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
   menuContent,
   children,
+  classes: classesProp,
   ...props
 }) => {
   const theme = useTheme();
@@ -86,6 +92,10 @@ const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
         variant={isNarrow ? 'persistent' : 'temporary'}
         open={open}
         onClose={() => toggle(false)}
+        classes={{
+          ...classesProp,
+          paper: clsx(classesProp?.paper, classes.drawerPaper),
+        }}
         {...props}
       >
         <Toolbar className={classes.toolbar}>

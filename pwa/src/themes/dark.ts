@@ -10,6 +10,10 @@ const darkTheme = createMuiTheme(
       mode: 'dark',
       primary: { main: '#ff6f60' },
       secondary: { main: '#ffb300' },
+      background: {
+        default: '#121212',
+        paper: '#1e1e1e',
+      },
     },
   },
   itIT,
