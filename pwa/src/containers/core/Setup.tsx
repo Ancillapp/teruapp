@@ -74,6 +74,9 @@ const Setup: FunctionComponent = () => {
         <Typography variant="h5">
           Innanzitutto, seleziona la tua comunità
         </Typography>
+        <Typography variant="subtitle2">
+          Potrai sempre modificarla in seguito dal menu laterale
+        </Typography>
       </div>
       <TextField
         fullWidth
