@@ -4,16 +4,13 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback,
 } from 'react';
-
-import { useLiveQuery } from 'dexie-react-hooks';
 
 import useCommunitiesQuery from '../hooks/data/useCommunitiesQuery';
 import useSongBooksLazyQuery from '../hooks/data/useSongBooksLazyQuery';
 import { Community } from '../models/community';
 import { SongBookSummary } from '../models/songBook';
-import { db } from '../helpers/db';
+import useSetting from '../hooks/useSetting';
 
 export interface CommunitiesContextValue {
   communities?: Community[];
@@ -27,11 +24,9 @@ export const CommunitiesContext = createContext<
 >(undefined);
 
 export const CommunitiesProvider: FunctionComponent = ({ children }) => {
-  // Note: Dexie returns undefined if an element doesn't exist.
-  // However, we want to return undefined while the element is loading
-  // and null if the element doesn't exist. For this reason, we set the default
-  // value while loading to null and then we basically invert the value.
-  const community = useLiveQuery(() => db.settings.get('community'), [], null);
+  const [selectedCommunity, setSelectedCommunity] = useSetting<Community>(
+    'community',
+  );
 
   const { loading, data } = useCommunitiesQuery();
 
@@ -41,36 +36,26 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
     SongBookSummary[] | undefined
   >();
 
-  const setSelectedCommunity = useCallback<
-    CommunitiesContextValue['setSelectedCommunity']
-  >((newCommunity) => {
-    db.settings.put({ key: 'community', value: newCommunity });
-  }, []);
-
   useEffect(() => {
     const updateSongBooks = async () => {
       setSelectedCommunitySongBooks(undefined);
 
-      if (community) {
+      if (selectedCommunity) {
         const songBooks = await getSongBooks({
-          community: (community.value as Community).id,
+          community: selectedCommunity.id,
         });
         setSelectedCommunitySongBooks(songBooks);
       }
     };
 
     updateSongBooks();
-  }, [community, getSongBooks]);
+  }, [getSongBooks, selectedCommunity]);
 
   return (
     <CommunitiesContext.Provider
       value={{
         communities: loading || !data ? undefined : data,
-        selectedCommunity:
-          // That's where we invert null and undefined
-          community === null
-            ? undefined
-            : (community?.value as Community) || null,
+        selectedCommunity,
         setSelectedCommunity,
         selectedCommunitySongBooks,
       }}
