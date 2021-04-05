@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useDeepCompareMemo } from 'use-deep-compare';
+
 import { joinUrls, toQueryParams } from '../helpers/url';
 import { useAPI } from '../providers/APIProvider';
 
@@ -61,6 +63,10 @@ const configureRequest = <
   return responseBody;
 };
 
+export interface UseQueryOptions extends RequestInitWithQueryParams {
+  enable?: boolean;
+}
+
 export interface UseQueryValue<T> {
   loading: boolean;
   data?: T;
@@ -70,13 +76,13 @@ export interface UseQueryValue<T> {
 
 export const useQuery = <T>(
   url: string,
-  options?: RequestInitWithQueryParams,
+  { enable = true, ...options }: UseQueryOptions = {},
 ): UseQueryValue<T> => {
   const { baseUrl } = useAPI();
 
   const mergedUrl = joinUrls(baseUrl, url);
 
-  const performRequest = useMemo(
+  const performRequest = useDeepCompareMemo(
     () => configureRequest<T>(mergedUrl, options),
     [mergedUrl, options],
   );
@@ -101,8 +107,10 @@ export const useQuery = <T>(
   }, [performRequest]);
 
   useEffect(() => {
-    refetch().catch(() => undefined);
-  }, [refetch]);
+    if (enable) {
+      refetch().catch(() => undefined);
+    }
+  }, [enable, refetch]);
 
   return {
     ...queryValue,
