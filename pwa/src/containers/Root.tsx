@@ -101,7 +101,7 @@ const Root: FunctionComponent = () => {
               Ignora
             </Button>
             <Button
-              color="secondary"
+              color="primary"
               size="small"
               disabled={isUpdating}
               onClick={handleUpdate}

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode } from 'react';
+import React, { FunctionComponent, ReactNode, useEffect } from 'react';
 
 import {
   AppBar,
@@ -37,6 +37,7 @@ const tweakedLightTheme = createMuiTheme({
   palette: {
     ...lightTheme.palette,
     mode: 'dark',
+    primary: { main: '#ffb300' },
     text: { primary: '#fff' },
   },
 });
@@ -127,10 +128,20 @@ const TopbarLayoutTemplate: FunctionComponent<TopbarLayoutProps> = ({
   );
 };
 
+const themeColor = document.querySelector<HTMLMetaElement>(
+  'meta[name="theme-color"]',
+);
+
 const TopbarLayout: FunctionComponent<TopbarLayoutProps> = (props) => {
   const themeName = useThemeName();
 
   const theme = themeName === 'dark' ? tweakedDarkTheme : tweakedLightTheme;
+
+  useEffect(() => {
+    if (themeColor) {
+      themeColor.content = theme.palette.primary.main;
+    }
+  }, [theme]);
 
   return (
     <ThemeProvider theme={theme}>

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import { Helmet } from 'react-helmet';
 
@@ -24,24 +24,12 @@ import CommunitiesProvider from '../providers/CommunitiesProvider';
 import MenuProvider from '../providers/MenuProvider';
 import ServiceWorkerProvider from '../providers/ServiceWorkerProvider';
 
-const themeColor = document.querySelector<HTMLMetaElement>(
-  'meta[name="theme-color"]',
-);
-
 const App: FunctionComponent = () => {
   const themeName = useThemeName();
 
-  const theme = themeName === 'dark' ? darkTheme : lightTheme;
-
-  useEffect(() => {
-    if (themeColor) {
-      themeColor.content = theme.palette.primary.main;
-    }
-  }, [theme]);
-
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={themeName === 'dark' ? darkTheme : lightTheme}>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={itLocale}>
           <Helmet defaultTitle="Teruapp" titleTemplate="Teruapp - %s" />
           <CssBaseline />
