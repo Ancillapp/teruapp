@@ -4,62 +4,65 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from 'react';
+
+import { useLiveQuery } from 'dexie-react-hooks';
 
 import useCommunitiesQuery from '../hooks/data/useCommunitiesQuery';
 import useSongBooksLazyQuery from '../hooks/data/useSongBooksLazyQuery';
 import { Community } from '../models/community';
 import { SongBookSummary } from '../models/songBook';
+import { db } from '../helpers/db';
+
+export interface CommunitiesContextValue {
+  communities?: Community[];
+  selectedCommunity?: Community | null;
+  selectedCommunitySongBooks?: SongBookSummary[];
+  setSelectedCommunity(newCommunity: Community): void;
+}
 
 export const CommunitiesContext = createContext<
-  | {
-      communities?: Community[];
-      selectedCommunity?: Community | null;
-      selectedCommunitySongBooks?: SongBookSummary[];
-      setSelectedCommunity(newCommunity: Community): void;
-    }
-  | undefined
+  CommunitiesContextValue | undefined
 >(undefined);
 
 export const CommunitiesProvider: FunctionComponent = ({ children }) => {
+  const community = useLiveQuery(() => db.settings.get('community'));
+
   const { loading, data } = useCommunitiesQuery();
 
   const [getSongBooks] = useSongBooksLazyQuery();
-
-  // TODO: store this value in IndexedDB
-  const [selectedCommunity, setSelectedCommunity] = useState<
-    Community | null | undefined
-  >();
 
   const [selectedCommunitySongBooks, setSelectedCommunitySongBooks] = useState<
     SongBookSummary[] | undefined
   >();
 
-  // This is just to simulate asynchronously getting the variable from IDB
-  useEffect(() => {
-    setSelectedCommunity(null);
+  const setSelectedCommunity = useCallback<
+    CommunitiesContextValue['setSelectedCommunity']
+  >((newCommunity) => {
+    db.settings.put({ key: 'community', value: newCommunity });
   }, []);
 
   useEffect(() => {
     const updateSongBooks = async () => {
       setSelectedCommunitySongBooks(undefined);
 
-      if (selectedCommunity) {
+      if (community) {
         const songBooks = await getSongBooks({
-          community: selectedCommunity.id,
+          community: (community.value as Community).id,
         });
         setSelectedCommunitySongBooks(songBooks);
       }
     };
 
     updateSongBooks();
-  }, [getSongBooks, selectedCommunity]);
+  }, [community, getSongBooks]);
 
   return (
     <CommunitiesContext.Provider
       value={{
         communities: loading || !data ? undefined : data,
-        selectedCommunity,
+        selectedCommunity: (community?.value as Community) || null,
         setSelectedCommunity,
         selectedCommunitySongBooks,
       }}
