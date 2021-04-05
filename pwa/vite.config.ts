@@ -5,7 +5,7 @@ import reactRefresh from '@vitejs/plugin-react-refresh';
 import { VitePWA } from 'vite-plugin-pwa';
 import { minifyHtml } from 'vite-plugin-html';
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [
     reactRefresh(),
     VitePWA(),
@@ -38,13 +38,11 @@ export default defineConfig(({ mode }) => ({
       // TODO: add this alias once Material UI v5 is out
       // '@material-ui/styled-engine': '@material-ui/styled-engine-sc',
       '@material-ui/icons': '@material-ui/icons/esm',
-      ...(mode === 'production' && {
-        react: 'preact/compat',
-        'react-dom': 'preact/compat',
-      }),
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
     },
   },
   build: {
     sourcemap: true,
   },
-}));
+});
