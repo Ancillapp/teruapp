@@ -39,6 +39,7 @@ export const get = async (id: string, { songBookId }: SongGetParams = {}) => {
         _id: 0,
         id: '$_id',
         title: 1,
+        language: 1,
         category: 1,
         content: 1,
         ...(songBookId && { 'songBooks.$': 1 }),
