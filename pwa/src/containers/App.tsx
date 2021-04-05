@@ -22,6 +22,7 @@ import itLocale from 'date-fns/locale/it';
 import APIProvider from '../providers/APIProvider';
 import CommunitiesProvider from '../providers/CommunitiesProvider';
 import MenuProvider from '../providers/MenuProvider';
+import ServiceWorkerProvider from '../providers/ServiceWorkerProvider';
 
 const themeColor = document.querySelector<HTMLMetaElement>(
   'meta[name="theme-color"]',
@@ -44,15 +45,17 @@ const App: FunctionComponent = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={itLocale}>
           <Helmet defaultTitle="Teruapp" titleTemplate="Teruapp - %s" />
           <CssBaseline />
-          <BrowserRouter>
-            <APIProvider baseUrl={import.meta.env.VITE_API_URL}>
-              <CommunitiesProvider>
-                <MenuProvider>
-                  <Root />
-                </MenuProvider>
-              </CommunitiesProvider>
-            </APIProvider>
-          </BrowserRouter>
+          <APIProvider baseUrl={import.meta.env.VITE_API_URL}>
+            <CommunitiesProvider>
+              <MenuProvider>
+                <ServiceWorkerProvider>
+                  <BrowserRouter>
+                    <Root />
+                  </BrowserRouter>
+                </ServiceWorkerProvider>
+              </MenuProvider>
+            </CommunitiesProvider>
+          </APIProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </StyledEngineProvider>
