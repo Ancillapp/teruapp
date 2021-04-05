@@ -27,7 +27,11 @@ export const CommunitiesContext = createContext<
 >(undefined);
 
 export const CommunitiesProvider: FunctionComponent = ({ children }) => {
-  const community = useLiveQuery(() => db.settings.get('community'));
+  // Note: Dexie returns undefined if an element doesn't exist.
+  // However, we want to return undefined while the element is loading
+  // and null if the element doesn't exist. For this reason, we set the default
+  // value while loading to null and then we basically invert the value.
+  const community = useLiveQuery(() => db.settings.get('community'), [], null);
 
   const { loading, data } = useCommunitiesQuery();
 
@@ -62,7 +66,11 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
     <CommunitiesContext.Provider
       value={{
         communities: loading || !data ? undefined : data,
-        selectedCommunity: (community?.value as Community) || null,
+        selectedCommunity:
+          // That's where we invert null and undefined
+          community === null
+            ? undefined
+            : (community?.value as Community) || null,
         setSelectedCommunity,
         selectedCommunitySongBooks,
       }}
