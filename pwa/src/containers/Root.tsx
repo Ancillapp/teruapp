@@ -45,72 +45,74 @@ const Root: FunctionComponent = () => {
   }
 
   return (
-    <Switch>
-      <Route
-        path="/:url*(/+)"
-        exact
-        strict
-        render={(props) => (
-          <Redirect to={`${props.location.pathname.slice(0, -1)}`} />
-        )}
-      />
-
-      <Suspense fallback={<Loader />}>
-        {selectedCommunity ? (
-          <SidebarLayout
-            menuContent={<SidebarMenu community={selectedCommunity} />}
-          >
-            <Suspense fallback={<PageSkeleton />}>
-              <Switch>
-                <Route path={`/${selectedCommunity.id}/libri-canti`}>
-                  <SongBooksRouter />
-                </Route>
-
-                <Route path="/informazioni">
-                  <Info />
-                </Route>
-
-                <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
-              </Switch>
-            </Suspense>
-          </SidebarLayout>
-        ) : (
-          <Switch>
-            <Route exact path="/configurazione">
-              <Setup />
-            </Route>
-
-            <Redirect to="/configurazione" />
-          </Switch>
-        )}
-
-        <Snackbar
-          open={showUpdateNotification}
-          message="Aggiornamento disponibile!"
-          action={
-            <>
-              <Button
-                color="inherit"
-                size="small"
-                disabled={isUpdating}
-                onClick={() => setShowUpdateNotification(false)}
-              >
-                Ignora
-              </Button>
-              <Button
-                color="secondary"
-                size="small"
-                disabled={isUpdating}
-                onClick={handleUpdate}
-              >
-                {isUpdating && <Loader size={18} />}
-                Aggiorna ora
-              </Button>
-            </>
-          }
+    <>
+      <Switch>
+        <Route
+          path="/:url*(/+)"
+          exact
+          strict
+          render={(props) => (
+            <Redirect to={`${props.location.pathname.slice(0, -1)}`} />
+          )}
         />
-      </Suspense>
-    </Switch>
+
+        <Suspense fallback={<Loader />}>
+          {selectedCommunity ? (
+            <SidebarLayout
+              menuContent={<SidebarMenu community={selectedCommunity} />}
+            >
+              <Suspense fallback={<PageSkeleton />}>
+                <Switch>
+                  <Route path={`/${selectedCommunity.id}/libri-canti`}>
+                    <SongBooksRouter />
+                  </Route>
+
+                  <Route path="/informazioni">
+                    <Info />
+                  </Route>
+
+                  <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
+                </Switch>
+              </Suspense>
+            </SidebarLayout>
+          ) : (
+            <Switch>
+              <Route exact path="/configurazione">
+                <Setup />
+              </Route>
+
+              <Redirect to="/configurazione" />
+            </Switch>
+          )}
+        </Suspense>
+      </Switch>
+
+      <Snackbar
+        open={showUpdateNotification}
+        message="Aggiornamento disponibile!"
+        action={
+          <>
+            <Button
+              color="inherit"
+              size="small"
+              disabled={isUpdating}
+              onClick={() => setShowUpdateNotification(false)}
+            >
+              Ignora
+            </Button>
+            <Button
+              color="secondary"
+              size="small"
+              disabled={isUpdating}
+              onClick={handleUpdate}
+            >
+              {isUpdating && <Loader size={18} />}
+              Aggiorna ora
+            </Button>
+          </>
+        }
+      />
+    </>
   );
 };
 

@@ -38,10 +38,8 @@ export default defineConfig({
       // TODO: add this alias once Material UI v5 is out
       // '@material-ui/styled-engine': '@material-ui/styled-engine-sc',
       '@material-ui/icons': '@material-ui/icons/esm',
-      // TODO: re-enable these aliases when Dexie React hooks
-      // and Preact compat will work seamlessly together
-      // react: 'preact/compat',
-      // 'react-dom': 'preact/compat',
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
     },
   },
   build: {
