@@ -1,7 +1,22 @@
 import { SongBook } from '../../models/songBook';
 
-import { useQuery } from '../fetching';
+import { useQuery, UseQueryOptions } from '../fetching';
 
-const useSongBookQuery = (id: string) => useQuery<SongBook>(`songbooks/${id}`);
+export interface SongBookQueryOptions {
+  fullData?: boolean;
+}
+
+const useSongBookQuery = (
+  id: string,
+  { fullData }: SongBookQueryOptions = {},
+  options?: UseQueryOptions,
+) =>
+  useQuery<SongBook>(`songbooks/${id}`, {
+    ...options,
+    query: {
+      ...options?.query,
+      ...(fullData && { fullData }),
+    },
+  });
 
 export default useSongBookQuery;
