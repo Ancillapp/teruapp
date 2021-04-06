@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 
 import { Link, useRouteMatch } from 'react-router-dom';
 
-import { IconButton, Typography } from '@material-ui/core';
+import { Button, IconButton, Typography } from '@material-ui/core';
 import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
 import TopbarLayout from '../../components/common/TopbarLayout';
@@ -11,6 +11,8 @@ import useSongBookQuery from '../../hooks/data/useSongBookQuery';
 import TopbarIcon from '../../components/common/TopbarIcon';
 import Songs from '../../components/songs/Songs';
 import { useCommunities } from '../../providers/CommunitiesProvider';
+import Prompt from '../../components/common/Prompt';
+import useSongsDownloadPreferencesPrompt from '../../hooks/useSongsDownloadPreferencesPrompt';
 
 const SongsList: FunctionComponent = () => {
   const {
@@ -18,11 +20,24 @@ const SongsList: FunctionComponent = () => {
     params: { songBookId },
   } = useRouteMatch<{ songBookId: string }>();
 
-  const { selectedCommunitySongBooks } = useCommunities();
+  const { selectedCommunity, selectedCommunitySongBooks } = useCommunities();
 
-  const { loading, data } = useSongBookQuery(songBookId);
+  const {
+    open: songsDownloadPromptOpen,
+    preference: songsDownloadPreference,
+    updatePreference: updateSongsDownloadPreference,
+  } = useSongsDownloadPreferencesPrompt();
 
-  return loading || !data || !selectedCommunitySongBooks ? (
+  const { data } = useSongBookQuery(
+    songBookId,
+    { fullData: songsDownloadPreference === 'yes' },
+    {
+      enable: typeof songsDownloadPreference !== 'undefined',
+    },
+  );
+
+  console.log(data);
+  return !data || !selectedCommunity || !selectedCommunitySongBooks ? (
     <PageSkeleton />
   ) : (
     <TopbarLayout
@@ -45,6 +60,29 @@ const SongsList: FunctionComponent = () => {
         <Typography variant="subtitle2" padding={2}>
           Nessun risultato.
         </Typography>
+      )}
+
+      {songsDownloadPromptOpen && (
+        <Prompt title="Vuoi scaricare i canti di questa comunità in modo da poterli consultare anche offline?">
+          <Button
+            color="inherit"
+            onClick={() => updateSongsDownloadPreference('never')}
+          >
+            Non chiedermelo più
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => updateSongsDownloadPreference('no')}
+          >
+            No, grazie
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => updateSongsDownloadPreference('yes')}
+          >
+            Certo!
+          </Button>
+        </Prompt>
       )}
     </TopbarLayout>
   );
