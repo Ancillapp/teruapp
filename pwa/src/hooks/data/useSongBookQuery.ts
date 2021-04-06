@@ -23,6 +23,13 @@ const useSongBookQuery = (
         return;
       }
 
+      if (!dbSongBook.songs || dbSongBook.songs.length < 1) {
+        return {
+          ...dbSongBook,
+          songs: [],
+        };
+      }
+
       const songBookSongNumbersKeyVal = Object.fromEntries(
         dbSongBook.songs.map(({ id, number }) => [id, number]),
       );
