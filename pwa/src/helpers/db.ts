@@ -36,7 +36,7 @@ class TeruappDB extends Dexie {
       settings: 'key',
       communities: 'id',
       songBooks: 'id',
-      songs: 'id, category, language, *songBooks',
+      songs: 'id, category, language',
     });
 
     this.settings = this.table('settings');
