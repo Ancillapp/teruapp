@@ -6,14 +6,20 @@ export interface GetSongBookParams {
   songBookId: string;
 }
 
+export interface GetSongBookQueryParams {
+  fullData?: string;
+}
+
 export const getSongBook: RequestHandler<
   GetSongBookParams,
   SongBookData,
   never,
-  never,
+  GetSongBookQueryParams,
   Record<string, unknown>
-> = async ({ params: { songBookId } }, res) => {
-  const songBook = await get(songBookId);
+> = async ({ params: { songBookId }, query: { fullData } }, res) => {
+  const songBook = await get(songBookId, {
+    fullData: typeof fullData !== 'undefined',
+  });
 
   if (!songBook) {
     return res.status(404).send();

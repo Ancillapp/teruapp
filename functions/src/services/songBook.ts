@@ -1,9 +1,11 @@
 import { mongoDb, ObjectId } from '../helpers/mongo';
 import { Community, Song, SongBook } from '../models/mongo';
 
-export interface SongBookSongData extends Pick<Song, 'title' | 'category'> {
+export interface SongBookSongData
+  extends Pick<Song, 'title' | 'language' | 'category'> {
   id: string;
   number: string;
+  content?: string;
 }
 
 export interface SongBookSummaryData extends Omit<SongBook, '_id'> {
@@ -32,7 +34,11 @@ const getSongBooksCollection = async () => {
   return db.collection<SongBook>('songBooks');
 };
 
-export const get = async (id: string) => {
+export interface SongBookGetParams {
+  fullData?: boolean;
+}
+
+export const get = async (id: string, { fullData }: SongBookGetParams = {}) => {
   const [songBooksCollection, songsCollection] = await Promise.all([
     getSongBooksCollection(),
     getSongsCollection(),
@@ -44,6 +50,8 @@ export const get = async (id: string) => {
       .find<{
         id: string;
         title: string;
+        language: string;
+        content?: string;
         category: string;
         songBooks: [Song['songBooks'][number]];
       }>(
@@ -59,8 +67,10 @@ export const get = async (id: string) => {
             _id: 0,
             id: '$_id',
             title: 1,
+            language: 1,
             category: 1,
             'songBooks.$': 1,
+            ...(fullData && { content: 1 }),
           },
         },
       )
