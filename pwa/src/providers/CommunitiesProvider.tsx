@@ -28,7 +28,7 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
     'community',
   );
 
-  const { loading, data } = useCommunitiesQuery();
+  const { data } = useCommunitiesQuery();
 
   const [getSongBooks] = useSongBooksLazyQuery();
 
@@ -54,7 +54,7 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
   return (
     <CommunitiesContext.Provider
       value={{
-        communities: loading || !data ? undefined : data,
+        communities: data,
         selectedCommunity,
         setSelectedCommunity,
         selectedCommunitySongBooks,
