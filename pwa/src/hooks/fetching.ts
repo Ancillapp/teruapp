@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useDeepCompareMemo } from 'use-deep-compare';
 
@@ -63,61 +63,6 @@ const configureRequest = <
   return responseBody;
 };
 
-export interface UseQueryOptions extends RequestInitWithQueryParams {
-  enable?: boolean;
-}
-
-export interface UseQueryValue<T> {
-  loading: boolean;
-  data?: T;
-  error?: Error;
-  refetch(): Promise<T>;
-}
-
-export const useQuery = <T>(
-  url: string,
-  { enable = true, ...options }: UseQueryOptions = {},
-): UseQueryValue<T> => {
-  const { baseUrl } = useAPI();
-
-  const mergedUrl = joinUrls(baseUrl, url);
-
-  const performRequest = useDeepCompareMemo(
-    () => configureRequest<T>(mergedUrl, options),
-    [mergedUrl, options],
-  );
-
-  const [queryValue, setQueryValue] = useState<
-    Omit<UseQueryValue<T>, 'refetch'>
-  >({ loading: true });
-
-  const refetch = useCallback<UseQueryValue<T>['refetch']>(async () => {
-    setQueryValue({ loading: true });
-
-    try {
-      const data = await performRequest();
-      setQueryValue({ loading: false, data });
-
-      return data;
-    } catch (error) {
-      setQueryValue({ loading: false, error });
-
-      throw error;
-    }
-  }, [performRequest]);
-
-  useEffect(() => {
-    if (enable) {
-      refetch().catch(() => undefined);
-    }
-  }, [enable, refetch]);
-
-  return {
-    ...queryValue,
-    refetch,
-  };
-};
-
 export type UseLazyQueryGetFunction<
   T = undefined,
   B = undefined,
@@ -151,7 +96,7 @@ export const useLazyQuery = <
 
   const mergedUrl = joinUrls(baseUrl, url);
 
-  const performRequest = useMemo(
+  const performRequest = useDeepCompareMemo(
     () => configureRequest<T, B, P, Q>(mergedUrl, options),
     [mergedUrl, options],
   );
@@ -179,4 +124,35 @@ export const useLazyQuery = <
   );
 
   return [request, queryValue];
+};
+
+export interface UseQueryOptions extends RequestInitWithQueryParams {
+  enable?: boolean;
+}
+
+export interface UseQueryValue<T> {
+  loading: boolean;
+  data?: T;
+  error?: Error;
+  refetch(): Promise<T>;
+}
+
+export const useQuery = <T>(
+  url: string,
+  { enable = true, ...options }: UseQueryOptions = {},
+): UseQueryValue<T> => {
+  const [refetch, queryValue] = useLazyQuery<T>(url, options);
+
+  useEffect(() => {
+    if (enable) {
+      // We don't want the function to throw; the error
+      // is already exposed in the returned object.
+      refetch().catch(() => undefined);
+    }
+  }, [enable, refetch]);
+
+  return {
+    ...queryValue,
+    refetch,
+  };
 };
