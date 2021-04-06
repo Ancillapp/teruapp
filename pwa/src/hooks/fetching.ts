@@ -1,46 +1,40 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useCallback, useEffect, useState } from 'react';
+
+import merge from 'deepmerge';
 
 import { useDeepCompareMemo } from 'use-deep-compare';
 
 import { joinUrls, toQueryParams } from '../helpers/url';
 import { useAPI } from '../providers/APIProvider';
 
-export interface RequestInitWithQueryParams extends RequestInit {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query?: Record<string, any>;
-}
-
-export interface RequestParams<
-  B = undefined,
-  P extends string | undefined = undefined,
-  Q = undefined
-> {
-  body?: B;
+export interface RequestOptions<
+  P extends Record<string, any> | undefined = undefined,
+  Q extends Record<string, any> | undefined = undefined,
+  B = undefined
+> extends Omit<RequestInit, 'body'> {
+  params?: P;
   query?: Q;
-  path?: P;
+  body?: B;
 }
 
-const configureRequest = <
+const performRequest = async <
   T = undefined,
-  B = undefined,
-  P extends string | undefined = undefined,
-  Q = undefined
+  P extends Record<string, any> | undefined = undefined,
+  Q extends Record<string, any> | undefined = undefined,
+  B = undefined
 >(
   url: string,
-  options: RequestInitWithQueryParams = {},
-) => async ({
-  body,
-  path = '',
-  query,
-}: RequestParams<B, P, Q> = {}): Promise<T> => {
-  const mergedUrl = joinUrls(url, path);
+  { body, params = {}, query, ...options }: RequestOptions<P, Q, B> = {},
+): Promise<T> => {
+  const urlWithParams = url.replace(/:([a-z]+)/gi, (_, match) => params[match]);
 
-  const urlWithParams =
-    options.query || query
-      ? `${mergedUrl}?${toQueryParams({ ...options.query, ...query })}`
-      : mergedUrl;
+  const urlWithQuery = query
+    ? `${urlWithParams}?${toQueryParams(query)}`
+    : urlWithParams;
 
-  const res = await fetch(urlWithParams, {
+  const res = await fetch(urlWithQuery, {
     ...options,
     headers: {
       accept: 'application/json',
@@ -65,10 +59,10 @@ const configureRequest = <
 
 export type UseLazyQueryGetFunction<
   T = undefined,
-  B = undefined,
-  P extends string | undefined = undefined,
-  Q = undefined
-> = (params?: RequestParams<B, P, Q>) => Promise<T>;
+  P extends Record<string, any> | undefined = undefined,
+  Q = undefined,
+  B = undefined
+> = (params?: RequestOptions<P, Q, B>) => Promise<T>;
 
 export interface UseLazyQueryResult<T> {
   loading: boolean;
@@ -78,39 +72,39 @@ export interface UseLazyQueryResult<T> {
 
 export type UseLazyQueryValue<
   T = undefined,
-  B = undefined,
-  P extends string | undefined = undefined,
-  Q = undefined
-> = [UseLazyQueryGetFunction<T, B, P, Q>, UseLazyQueryResult<T>];
+  P extends Record<string, any> | undefined = undefined,
+  Q = undefined,
+  B = undefined
+> = [UseLazyQueryGetFunction<T, P, Q, B>, UseLazyQueryResult<T>];
 
 export const useLazyQuery = <
   T = undefined,
-  B = undefined,
-  P extends string | undefined = undefined,
-  Q = undefined
+  P extends Record<string, any> | undefined = undefined,
+  Q = undefined,
+  B = undefined
 >(
   url: string,
-  options?: RequestInitWithQueryParams,
-): UseLazyQueryValue<T, B, P, Q> => {
+  options: RequestOptions<P, Q, B> = {},
+): UseLazyQueryValue<T, P, Q, B> => {
   const { baseUrl } = useAPI();
 
   const mergedUrl = joinUrls(baseUrl, url);
 
-  const performRequest = useDeepCompareMemo(
-    () => configureRequest<T, B, P, Q>(mergedUrl, options),
-    [mergedUrl, options],
-  );
+  const memoizedOptions = useDeepCompareMemo(() => options, [options]);
 
   const [queryValue, setQueryValue] = useState<
     Omit<UseQueryValue<T>, 'refetch'>
   >({ loading: true });
 
-  const request = useCallback<UseLazyQueryGetFunction<T, B, P, Q>>(
-    async (params) => {
+  const request = useCallback<UseLazyQueryGetFunction<T, P, Q, B>>(
+    async (requestOptions = {}) => {
       setQueryValue({ loading: true });
 
       try {
-        const data = await performRequest(params);
+        const data = await performRequest<T, P, Q, B>(
+          mergedUrl,
+          merge(memoizedOptions, requestOptions),
+        );
         setQueryValue({ loading: false, data });
 
         return data;
@@ -120,13 +114,17 @@ export const useLazyQuery = <
         throw error;
       }
     },
-    [performRequest],
+    [memoizedOptions, mergedUrl],
   );
 
   return [request, queryValue];
 };
 
-export interface UseQueryOptions extends RequestInitWithQueryParams {
+export interface UseQueryOptions<
+  P extends Record<string, any> | undefined = undefined,
+  Q extends Record<string, any> | undefined = undefined,
+  B = undefined
+> extends RequestOptions<P, Q, B> {
   enable?: boolean;
 }
 
@@ -137,11 +135,16 @@ export interface UseQueryValue<T> {
   refetch(): Promise<T>;
 }
 
-export const useQuery = <T>(
+export const useQuery = <
+  T = undefined,
+  P extends Record<string, any> | undefined = undefined,
+  Q = undefined,
+  B = undefined
+>(
   url: string,
-  { enable = true, ...options }: UseQueryOptions = {},
+  { enable = true, ...options }: UseQueryOptions<P, Q, B> = {},
 ): UseQueryValue<T> => {
-  const [refetch, queryValue] = useLazyQuery<T>(url, options);
+  const [refetch, queryValue] = useLazyQuery<T, P, Q, B>(url, options);
 
   useEffect(() => {
     if (enable) {

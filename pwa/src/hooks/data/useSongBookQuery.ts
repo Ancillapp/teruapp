@@ -11,10 +11,10 @@ const useSongBookQuery = (
   { fullData }: SongBookQueryOptions = {},
   options?: UseQueryOptions,
 ) =>
-  useQuery<SongBook>(`songbooks/${id}`, {
+  useQuery<SongBook, never, SongBookQueryOptions>(`songbooks/${id}`, {
     ...options,
     query: {
-      ...options?.query,
+      ...(options?.query || {}),
       ...(fullData && { fullData }),
     },
   });

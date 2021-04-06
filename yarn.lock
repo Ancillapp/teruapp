@@ -4469,6 +4469,11 @@ deprecation@^2.0.0, deprecation@^2.3.1:
   resolved "https://registry.yarnpkg.com/deprecation/-/deprecation-2.3.1.tgz#6368cbdb40abf3373b525ac87e4a260c3a700919"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
+dequal@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.0.tgz#41c6065e70de738541c82cdbedea5292277a017e"
+  integrity sha512-/Nd1EQbQbI9UbSHrMiKZjFLrXSnU328iQdZKPQf78XQI6C+gutkFUeoHpG5J08Ioa6HeRbRNFpSIclh1xyG0mw==
+
 destroy@^1.0.4, destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
@@ -11153,6 +11158,13 @@ use-debounce@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-6.0.0.tgz#972300f9660ddd8fd12fa7cb78a17e0290a6a2c5"
   integrity sha512-d4Sy6j8J0kkPXqIUGvIf829HCtyErxG8NMoFOJAvYSZP4Xuar7PURNt9LkvkGYoQw7i4iuez1jo957TL4m772g==
+
+use-deep-compare@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/use-deep-compare/-/use-deep-compare-1.1.0.tgz#85580dde751f68400bf6ef7e043c7f986595cef8"
+  integrity sha512-6yY3zmKNCJ1jjIivfZMZMReZjr8e6iC6Uqtp701jvWJ6ejC/usXD+JjmslZDPJQgX8P4B1Oi5XSLHkOLeYSJsA==
+  dependencies:
+    dequal "1.0.0"
 
 use@^3.1.0:
   version "3.1.1"

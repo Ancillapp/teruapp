@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { SongBookSummary } from '../../models/songBook';
 
-import { useLazyQuery, UseLazyQueryResult } from '../fetching';
+import { useLazyQuery, UseLazyQueryResult, UseQueryOptions } from '../fetching';
 
 export interface SongBooksLazyQueryParams {
   community?: string;
@@ -9,6 +9,7 @@ export interface SongBooksLazyQueryParams {
 
 export type SongBooksLazyQueryFunction = (
   params?: SongBooksLazyQueryParams,
+  options?: UseQueryOptions<never, SongBooksLazyQueryParams>,
 ) => Promise<SongBookSummary[]>;
 
 const useSongBooksLazyQuery = (): [
@@ -17,20 +18,19 @@ const useSongBooksLazyQuery = (): [
 ] => {
   const [getSongBooks, data] = useLazyQuery<
     SongBookSummary[],
-    undefined,
-    undefined,
+    never,
     SongBooksLazyQueryParams
   >('songbooks');
 
   const query = useCallback<SongBooksLazyQueryFunction>(
-    async ({ community } = {}) =>
-      getSongBooks(
-        community
-          ? {
-              query: { community },
-            }
-          : undefined,
-      ),
+    async ({ community } = {}, options) =>
+      getSongBooks({
+        ...options,
+        query: {
+          ...options?.query,
+          ...(community && { community }),
+        },
+      }),
     [getSongBooks],
   );
 
