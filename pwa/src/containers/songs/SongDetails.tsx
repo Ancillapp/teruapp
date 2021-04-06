@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
 
-import PageSkeleton from '../../components/common/PageSkeleton';
 import TopbarIcon from '../../components/common/TopbarIcon';
 import TopbarLayout from '../../components/common/TopbarLayout';
 import useSongQuery from '../../hooks/data/useSongQuery';
@@ -18,11 +17,9 @@ const SongDetails: FunctionComponent = () => {
     params: { songBookId, songId },
   } = useRouteMatch<{ songBookId: string; songId: string }>();
 
-  const { loading, data } = useSongQuery(songBookId, songId);
+  const { data } = useSongQuery(songBookId, songId);
 
-  return loading || !data ? (
-    <PageSkeleton />
-  ) : (
+  return (
     <TopbarLayout
       title={<SongTitle song={data} />}
       startAdornment={

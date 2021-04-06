@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, memo } from 'react';
 
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Skeleton, Typography } from '@material-ui/core';
 
 import { compileSong } from '../../helpers/compilers';
 import { SongBookSong } from '../../models/song';
@@ -8,7 +8,7 @@ import { SongBookSong } from '../../models/song';
 import Page from '../common/Page';
 
 export interface SongLyricsProps {
-  song: SongBookSong;
+  song?: SongBookSong;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -33,22 +33,39 @@ const useStyles = makeStyles((theme) => ({
   verse: {},
 }));
 
-const SongLyrics: FunctionComponent<SongLyricsProps> = ({
-  song: { content },
-}) => {
+const SongLyrics: FunctionComponent<SongLyricsProps> = ({ song }) => {
   const classes = useStyles();
-
-  const compiledSong = useMemo(() => compileSong(content, { classes }), [
-    classes,
-    content,
-  ]);
 
   return (
     <Page
       className={classes.root}
-      dangerouslySetInnerHTML={{ __html: compiledSong }}
-    />
+      {...(song && {
+        dangerouslySetInnerHTML: {
+          __html: compileSong(song.content, { classes }),
+        },
+      })}
+    >
+      {song
+        ? null
+        : Array.from(
+            { length: Math.round(Math.random() * 3 + 2) },
+            (_, index) => (
+              <Typography key={index}>
+                {Array.from(
+                  { length: Math.round(Math.random() * 2 + 3) },
+                  (_, subindex) => (
+                    <Skeleton
+                      key={`${index}-${subindex}`}
+                      variant="text"
+                      width={Math.random() * 128 + 128}
+                    />
+                  ),
+                )}
+              </Typography>
+            ),
+          )}
+    </Page>
   );
 };
 
-export default SongLyrics;
+export default memo(SongLyrics);

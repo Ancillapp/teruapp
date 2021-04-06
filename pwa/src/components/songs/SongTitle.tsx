@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, memo } from 'react';
 
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Skeleton, Typography } from '@material-ui/core';
 
 import { compileSong } from '../../helpers/compilers';
 import { SongBookSong } from '../../models/song';
 
 export interface SongLyricsProps {
-  song: SongBookSong;
+  song?: SongBookSong;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -17,23 +17,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SongLyrics: FunctionComponent<SongLyricsProps> = ({
-  song: { number, title },
-}) => {
+const SongLyrics: FunctionComponent<SongLyricsProps> = ({ song }) => {
   const classes = useStyles();
 
-  const compiledTitle = useMemo(
-    () => compileSong(`${number}. ${title}`, { wrap: false }),
-    [number, title],
-  );
-
-  return (
+  return song ? (
     <Typography
       variant="h6"
       className={classes.root}
-      dangerouslySetInnerHTML={{ __html: compiledTitle }}
+      dangerouslySetInnerHTML={{
+        __html: compileSong(`${song.number}. ${song.title}`, { wrap: false }),
+      }}
     />
+  ) : (
+    <Skeleton variant="text" width={192} />
   );
 };
 
-export default SongLyrics;
+export default memo(SongLyrics);
