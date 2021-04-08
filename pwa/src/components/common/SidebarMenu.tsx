@@ -76,7 +76,7 @@ const getSongBooksMenuItem = (
 ) => {
   const baseMenuItem = { key: 'libri-canti' };
 
-  if (typeof songBooks === 'undefined') {
+  if (!songBooks || songBooks.length < 1) {
     return {
       ...baseMenuItem,
       title: <Skeleton variant="text" width={160} />,
