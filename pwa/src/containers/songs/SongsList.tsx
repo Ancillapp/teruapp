@@ -36,7 +36,6 @@ const SongsList: FunctionComponent = () => {
     },
   );
 
-  console.log(data);
   return !data || !selectedCommunity || !selectedCommunitySongBooks ? (
     <PageSkeleton />
   ) : (
