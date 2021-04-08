@@ -18,7 +18,9 @@ import {
 import {
   LibraryMusicRounded as LibraryMusicIcon,
   MusicNoteRounded as MusicNoteIcon,
+  SettingsRounded as SettingsIcon,
   InfoOutlined as InfoIcon,
+  PolicyOutlined as PolicyIcon,
 } from '@material-ui/icons';
 
 import { useMenu } from '../../providers/MenuProvider';
@@ -59,9 +61,19 @@ const UPPER_MENU_ITEMS: MenuItem[] = [];
 
 const LOWER_MENU_ITEMS: MenuItem[] = [
   {
+    key: 'impostazioni',
+    title: 'Impostazioni',
+    icon: <SettingsIcon />,
+  },
+  {
     key: 'informazioni',
     title: 'Informazioni',
     icon: <InfoIcon />,
+  },
+  {
+    key: 'privacy',
+    title: 'Privacy',
+    icon: <PolicyIcon />,
   },
 ];
 

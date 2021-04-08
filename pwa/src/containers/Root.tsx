@@ -67,8 +67,16 @@ const Root: FunctionComponent = () => {
                     <SongBooksRouter />
                   </Route>
 
+                  <Route path="/impostazioni">
+                    <>Impostazioni</>
+                  </Route>
+
                   <Route path="/informazioni">
                     <Info />
+                  </Route>
+
+                  <Route path="/privacy">
+                    <>Privacy</>
                   </Route>
 
                   <Redirect to={`/${selectedCommunity.id}/libri-canti`} />
