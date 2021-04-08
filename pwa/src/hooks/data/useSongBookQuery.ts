@@ -19,15 +19,11 @@ const useSongBookQuery = (
     async (): Promise<SongBook | undefined> => {
       const dbSongBook = await db.songBooks.get(id);
 
-      if (!dbSongBook) {
+      // If the song book has been cached, but it doesn't have the songs
+      // array, it means that we only cached the summary of the song book,
+      // so we just ignore the cached data
+      if (!dbSongBook || !dbSongBook.songs) {
         return;
-      }
-
-      if (!dbSongBook.songs || dbSongBook.songs.length < 1) {
-        return {
-          ...dbSongBook,
-          songs: [],
-        };
       }
 
       const songBookSongNumbersKeyVal = Object.fromEntries(
@@ -66,20 +62,9 @@ const useSongBookQuery = (
         songs: data.songs.map(({ id, number }) => ({ id, number })),
       });
 
-      if (songBook) {
-        const deletedSongs = songBook.songs.filter((song) =>
-          data.songs.every(({ id }) => id !== song.id),
-        );
-
-        db.songs.bulkDelete(deletedSongs.map(({ id }) => id));
-      }
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       db.songs.bulkPut(data.songs.map(({ number, ...song }) => song));
     }
-
-    // We don't want to add the song book to the dependencies to avoid infinite loops
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return { data: songBook, ...rest };
