@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 import useCommunitiesQuery from '../hooks/data/useCommunitiesQuery';
-import useSongBooksLazyQuery from '../hooks/data/useSongBooksLazyQuery';
+import useSongBooksQuery from '../hooks/data/useSongBooksQuery';
 import { Community } from '../models/community';
 import { SongBookSummary } from '../models/songBook';
 import useSetting from '../hooks/useSetting';
@@ -28,33 +28,29 @@ export const CommunitiesProvider: FunctionComponent = ({ children }) => {
     'community',
   );
 
-  const { data } = useCommunitiesQuery();
+  const { data: communities } = useCommunitiesQuery();
 
-  const [getSongBooks] = useSongBooksLazyQuery();
+  const { data: songBooks } = useSongBooksQuery(
+    { community: selectedCommunity?.id },
+    { enable: !!selectedCommunity },
+  );
 
   const [selectedCommunitySongBooks, setSelectedCommunitySongBooks] = useState<
     SongBookSummary[] | undefined
   >();
 
   useEffect(() => {
-    const updateSongBooks = async () => {
-      setSelectedCommunitySongBooks(undefined);
+    setSelectedCommunitySongBooks(undefined);
+  }, [selectedCommunity]);
 
-      if (selectedCommunity) {
-        const songBooks = await getSongBooks({
-          community: selectedCommunity.id,
-        });
-        setSelectedCommunitySongBooks(songBooks);
-      }
-    };
-
-    updateSongBooks();
-  }, [getSongBooks, selectedCommunity]);
+  useEffect(() => {
+    setSelectedCommunitySongBooks(songBooks);
+  }, [songBooks]);
 
   return (
     <CommunitiesContext.Provider
       value={{
-        communities: data,
+        communities,
         selectedCommunity,
         setSelectedCommunity,
         selectedCommunitySongBooks,
