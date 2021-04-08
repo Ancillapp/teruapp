@@ -11,8 +11,8 @@ import useSongBookQuery from '../../hooks/data/useSongBookQuery';
 import TopbarIcon from '../../components/common/TopbarIcon';
 import Songs from '../../components/songs/Songs';
 import { useCommunities } from '../../providers/CommunitiesProvider';
-import Prompt from '../../components/common/Prompt';
-import useSongsDownloadPreferencesPrompt from '../../hooks/useSongsDownloadPreferencesPrompt';
+import Banner from '../../components/common/Banner';
+import useSongsDownloadPreferences from '../../hooks/useSongsDownloadPreferences';
 
 const SongsList: FunctionComponent = () => {
   const {
@@ -23,10 +23,10 @@ const SongsList: FunctionComponent = () => {
   const { selectedCommunity, selectedCommunitySongBooks } = useCommunities();
 
   const {
-    open: songsDownloadPromptOpen,
+    open: songsDownloadBannerOpen,
     preference: songsDownloadPreference,
     updatePreference: updateSongsDownloadPreference,
-  } = useSongsDownloadPreferencesPrompt();
+  } = useSongsDownloadPreferences();
 
   const { data } = useSongBookQuery(
     songBookId,
@@ -53,16 +53,8 @@ const SongsList: FunctionComponent = () => {
         ) : undefined
       }
     >
-      {data.songs.length > 0 ? (
-        <Songs baseUrl={url} items={data.songs} />
-      ) : (
-        <Typography variant="subtitle2" padding={2}>
-          Nessun risultato.
-        </Typography>
-      )}
-
-      {songsDownloadPromptOpen && (
-        <Prompt title="Vuoi scaricare i canti di questa comunità in modo da poterli consultare anche offline?">
+      {songsDownloadBannerOpen && (
+        <Banner title="Vuoi scaricare i canti di questa comunità in modo da poterli consultare anche offline?">
           <Button
             color="inherit"
             onClick={() => updateSongsDownloadPreference('never')}
@@ -81,7 +73,15 @@ const SongsList: FunctionComponent = () => {
           >
             Certo!
           </Button>
-        </Prompt>
+        </Banner>
+      )}
+
+      {data.songs.length > 0 ? (
+        <Songs baseUrl={url} items={data.songs} />
+      ) : (
+        <Typography variant="subtitle2" padding={2}>
+          Nessun risultato.
+        </Typography>
       )}
     </TopbarLayout>
   );

@@ -6,7 +6,7 @@ import useSetting from './useSetting';
 
 export type SongsDownloadPreference = 'yes' | 'no' | 'never';
 
-export interface SongsDownloadPreferencesPromptValue {
+export interface SongsDownloadPreferencesValue {
   open: boolean;
   preference?: SongsDownloadPreference;
   updatePreference(preference: SongsDownloadPreference): Promise<void>;
@@ -20,7 +20,7 @@ const getPreference = (storedValue?: boolean): SongsDownloadPreference => {
   return storedValue ? 'yes' : 'never';
 };
 
-const useSongsDownloadPreferencesPrompt = (): SongsDownloadPreferencesPromptValue => {
+const useSongsDownloadPreferences = (): SongsDownloadPreferencesValue => {
   const [
     communitiesSongsDownloadPreferences,
     setCommunitiesSongsDownloadPreferences,
@@ -37,7 +37,7 @@ const useSongsDownloadPreferencesPrompt = (): SongsDownloadPreferencesPromptValu
   );
 
   const updatePreference = useCallback<
-    SongsDownloadPreferencesPromptValue['updatePreference']
+    SongsDownloadPreferencesValue['updatePreference']
   >(
     async (preference) => {
       if (!selectedCommunity) {
@@ -84,4 +84,4 @@ const useSongsDownloadPreferencesPrompt = (): SongsDownloadPreferencesPromptValu
   };
 };
 
-export default useSongsDownloadPreferencesPrompt;
+export default useSongsDownloadPreferences;
