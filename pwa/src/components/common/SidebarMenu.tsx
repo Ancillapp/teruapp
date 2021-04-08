@@ -113,14 +113,14 @@ const SidebarMenu: FunctionComponent<SidebarMenuProps> = ({
 
   const theme = useTheme();
 
-  const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { toggle } = useMenu();
 
   const { selectedCommunitySongBooks } = useCommunities();
 
   const handleItemClick = () => {
-    if (!isNarrow) {
+    if (!isTablet) {
       toggle(false);
     }
 

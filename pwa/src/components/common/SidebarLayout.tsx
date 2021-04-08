@@ -81,7 +81,7 @@ const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
 
   const classes = useStyles();
 
-  const isNarrow = useMediaQuery(theme.breakpoints.up('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { open, toggle } = useMenu();
 
@@ -89,7 +89,7 @@ const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
     <div className={classes.root}>
       <Drawer
         anchor="left"
-        variant={isNarrow ? 'persistent' : 'temporary'}
+        variant={isTablet ? 'persistent' : 'temporary'}
         open={open}
         onClose={() => toggle(false)}
         classes={{
@@ -109,7 +109,7 @@ const SidebarLayout: FunctionComponent<SidebarLayoutProps> = ({
       <div
         className={clsx(
           classes.content,
-          isNarrow && !open && classes.expandedContent,
+          isTablet && !open && classes.expandedContent,
         )}
       >
         {children}
