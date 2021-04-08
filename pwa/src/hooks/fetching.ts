@@ -144,7 +144,9 @@ export const useQuery = <
   url: string,
   { enable = true, ...options }: UseQueryOptions<P, Q, B> = {},
 ): UseQueryValue<T> => {
-  const [refetch, queryValue] = useLazyQuery<T, P, Q, B>(url, options);
+  const memoizedOptions = useDeepCompareMemo(() => options, [options]);
+
+  const [refetch, queryValue] = useLazyQuery<T, P, Q, B>(url, memoizedOptions);
 
   useEffect(() => {
     if (enable) {
@@ -152,7 +154,7 @@ export const useQuery = <
       // is already exposed in the returned object.
       refetch().catch(() => undefined);
     }
-  }, [enable, refetch]);
+  }, [enable, memoizedOptions, refetch, url]);
 
   return {
     ...queryValue,
