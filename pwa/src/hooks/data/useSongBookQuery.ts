@@ -62,8 +62,11 @@ const useSongBookQuery = (
         songs: data.songs.map(({ id, number }) => ({ id, number })),
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      db.songs.bulkPut(data.songs.map(({ number, ...song }) => song));
+      db.songs.bulkUpsert(
+        data.songs.map(({ id }) => id),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        data.songs.map(({ number, ...song }) => song),
+      );
     }
   }, [data]);
 
