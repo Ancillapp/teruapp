@@ -3,7 +3,10 @@ import React, { FunctionComponent } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 
 import { Button, IconButton, Typography } from '@material-ui/core';
-import { ArrowBackRounded as ArrowBackIcon } from '@material-ui/icons';
+import {
+  ArrowBackRounded as ArrowBackIcon,
+  GetApp as GetAppIcon,
+} from '@material-ui/icons';
 
 import TopbarLayout from '../../components/common/TopbarLayout';
 import PageSkeleton from '../../components/common/PageSkeleton';
@@ -54,7 +57,10 @@ const SongsList: FunctionComponent = () => {
       }
     >
       {songsDownloadBannerOpen && (
-        <Banner title="Vuoi scaricare i canti di questa comunità in modo da poterli consultare anche offline?">
+        <Banner
+          icon={<GetAppIcon />}
+          title="Vuoi scaricare i canti di questa comunità in modo da poterli consultare anche offline?"
+        >
           <Button
             color="inherit"
             onClick={() => updateSongsDownloadPreference('never')}
