@@ -1,0 +1,26 @@
+name: Deploy to staging
+'on':
+  push:
+    branches:
+      - develop
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install deps
+        run: yarn install
+      - name: Build
+        run: yarn build
+        env:
+          VITE_API_URL: '/api'
+          VITE_PAYPAL_HOSTED_BUTTON_ID: 'HTNKY9MFL74CL'
+      - name: Deploy
+        run: yarn firebase deploy --project teruapp-staging --config firebase.json --token "$FIREBASE_TOKEN" --only hosting:teruapp-staging,functions:pwa
+        env:
+          FIREBASE_TOKEN: '${{secrets.FIREBASE_TOKEN}}'
