@@ -5,6 +5,7 @@ import { Link, makeStyles, Typography } from '@material-ui/core';
 import Page from '../../components/common/Page';
 import TopbarLayout from '../../components/common/TopbarLayout';
 import PayPalDonateButton from '../../components/common/PayPalDonateButton';
+import BTCPayDonateButton from '../../components/common/BTCPayDonateButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
   donationButtons: {
     margin: theme.spacing(2, 0, 0),
-    textAlign: 'center',
+    display: 'flex',
+    flexWrap: 'wrap',
+
+    '& > *': {
+      flex: '1 1 auto',
+      margin: theme.spacing(0, 1, 2, 1),
+    },
   },
 }));
 
@@ -74,6 +81,10 @@ const Info: FunctionComponent = () => {
         <div className={classes.donationButtons}>
           <PayPalDonateButton
             hostedButtonId={import.meta.env.VITE_PAYPAL_HOSTED_BUTTON_ID}
+          />
+          <BTCPayDonateButton
+            storeUrl={import.meta.env.VITE_BTCPAY_STORE_URL}
+            appId={import.meta.env.VITE_BTCPAY_APP_ID}
           />
         </div>
       </Page>

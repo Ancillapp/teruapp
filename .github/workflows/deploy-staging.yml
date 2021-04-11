@@ -20,6 +20,8 @@ jobs:
         env:
           VITE_API_URL: '/api'
           VITE_PAYPAL_HOSTED_BUTTON_ID: 'HTNKY9MFL74CL'
+          VITE_BTCPAY_STORE_URL: 'https://pay.garasto.me'
+          VITE_BTCPAY_APP_ID: '2H1MnuU6JKSyHxPLMv7hneGbEGuP'
       - name: Deploy
         run: yarn firebase deploy --project teruapp-staging --config firebase.json --token "$FIREBASE_TOKEN" --only hosting:teruapp-staging,functions:pwa
         env:

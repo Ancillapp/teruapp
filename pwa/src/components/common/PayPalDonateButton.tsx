@@ -17,7 +17,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     display: 'inline-flex',
     alignItems: 'center',
-    padding: theme.spacing(0.75, 6),
+    justifyContent: 'center',
+    minWidth: 220,
+    padding: theme.spacing(1),
     willChange: 'transform',
     transition: theme.transitions.create('box-shadow', {
       duration: 300,
